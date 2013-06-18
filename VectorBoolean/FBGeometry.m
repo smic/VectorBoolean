@@ -6,7 +6,7 @@
 //  Copyright 2011 Fortunate Bear, LLC. All rights reserved.
 //
 
-#import "Geometry.h"
+#import "FBGeometry.h"
 
 static const CGFloat FBPointClosenessThreshold = 1e-10;
 

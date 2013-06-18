@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "Geometry.h"
+#import "FBGeometry.h"
 
 @class FBBezierIntersectRange;
 

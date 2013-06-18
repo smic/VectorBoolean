@@ -8,7 +8,7 @@
 
 #import "FBBezierIntersection.h"
 #import "FBBezierCurve.h"
-#import "Geometry.h"
+#import "FBGeometry.h"
 
 static const CGFloat FBPointCloseThreshold = 1e-7;
 const CGFloat FBParameterCloseThreshold = 1e-5;

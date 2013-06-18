@@ -7,7 +7,7 @@
 //
 
 #import "NSBezierPath+Utilities.h"
-#import "Geometry.h"
+#import "FBGeometry.h"
 
 static const CGFloat FBDebugPointSize = 10.0;
 static const CGFloat FBDebugSmallPointSize = 3.0;

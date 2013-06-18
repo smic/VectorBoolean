@@ -8,7 +8,7 @@
 
 #import "FBBezierCurve.h"
 #import "NSBezierPath+Utilities.h"
-#import "Geometry.h"
+#import "FBGeometry.h"
 #import "FBBezierIntersection.h"
 #import "FBBezierIntersectRange.h"
 

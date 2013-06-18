@@ -12,7 +12,7 @@
 #import "FBEdgeCrossing.h"
 #import "FBContourOverlap.h"
 #import "FBDebug.h"
-#import "Geometry.h"
+#import "FBGeometry.h"
 #import "FBBezierIntersection.h"
 #import "NSBezierPath+Utilities.h"
 

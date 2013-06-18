@@ -11,7 +11,7 @@
 #import "FBBezierContour.h"
 #import "FBBezierIntersection.h"
 #import "FBBezierCurve.h"
-#import "Geometry.h"
+#import "FBGeometry.h"
 #import "FBDebug.h"
 
 

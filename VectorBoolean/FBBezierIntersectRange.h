@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Geometry.h"
+#import "FBGeometry.h"
 
 @class FBBezierCurve, FBBezierIntersection;
 
