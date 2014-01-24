@@ -37,6 +37,12 @@ BOOL FBArePointsClose(NSPoint point1, NSPoint point2);
 BOOL FBArePointsCloseWithOptions(NSPoint point1, NSPoint point2, CGFloat threshold);
 BOOL FBAreValuesClose(CGFloat value1, CGFloat value2);
 BOOL FBAreValuesCloseWithOptions(CGFloat value1, CGFloat value2, CGFloat threshold);
+BOOL FBIsValueGreaterThan(CGFloat value, CGFloat minimum);
+BOOL FBIsValueLessThan(CGFloat value, CGFloat maximum);
+BOOL FBIsValueGreaterThanEqual(CGFloat value, CGFloat minimum);
+BOOL FBIsValueLessThanEqual(CGFloat value, CGFloat maximum);
+
+extern BOOL FBLineBoundsMightOverlap(NSRect bounds1, NSRect bounds2);
 
 //////////////////////////////////////////////////////////////////////////
 // Angle Range structure provides a simple way to store angle ranges
@@ -68,5 +74,7 @@ extern BOOL FBRangeHasConverged(FBRange range, NSUInteger places);
 extern CGFloat FBRangeGetSize(FBRange range);
 extern CGFloat FBRangeAverage(FBRange range);
 extern CGFloat FBRangeScaleNormalizedValue(FBRange range, CGFloat value);
+extern FBRange FBRangeUnion(FBRange range1, FBRange range2);
 
 extern BOOL FBTangentsCross(NSPoint edge1Tangents[2], NSPoint edge2Tangents[2]);
+extern BOOL FBAreTangentsAmbigious(NSPoint edge1Tangents[2], NSPoint edge2Tangents[2]);

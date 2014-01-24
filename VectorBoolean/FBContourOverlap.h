@@ -8,19 +8,23 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBBezierContour, FBContourEdge, FBBezierIntersectRange;
+@class FBBezierContour, FBBezierCurve, FBBezierIntersectRange, FBEdgeCrossing;
 
 @interface FBEdgeOverlap : NSObject {
-    FBContourEdge *_edge1;
-    FBContourEdge *_edge2;
+    FBBezierCurve *_edge1;
+    FBBezierCurve *_edge2;
     FBBezierIntersectRange *_range;
 }
+
+@property (readonly) FBBezierIntersectRange *range;
 
 @end
 
 @interface FBEdgeOverlapRun : NSObject {
     NSMutableArray *_overlaps;
 }
+
+@property (readonly) NSArray *overlaps;
 
 - (BOOL) isCrossing;
 - (void) addCrossings;
@@ -33,16 +37,19 @@
 
 + (id) contourOverlap;
 
-@property (readonly) NSArray *runs;
 @property (readonly) FBBezierContour *contour1;
 @property (readonly) FBBezierContour *contour2;
 
-- (void) addOverlap:(FBBezierIntersectRange *)range forEdge1:(FBContourEdge *)edge1 edge2:(FBContourEdge *)edge2;
+- (void) addOverlap:(FBBezierIntersectRange *)range forEdge1:(FBBezierCurve *)edge1 edge2:(FBBezierCurve *)edge2;
+- (void) runsWithBlock:(void (^)(FBEdgeOverlapRun *run, BOOL *stop))block;
 
 - (void) reset;
 
 - (BOOL) isComplete;
+- (BOOL) isEmpty;
 
 - (BOOL) isBetweenContour:(FBBezierContour *)contour1 andContour:(FBBezierContour *)contour2;
+- (BOOL) doesContainCrossing:(FBEdgeCrossing *)crossing;
+- (BOOL) doesContainParameter:(CGFloat)parameter onEdge:(FBBezierCurve *)edge;
 
 @end

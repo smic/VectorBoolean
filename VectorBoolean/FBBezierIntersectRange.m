@@ -16,6 +16,7 @@ extern const CGFloat FBParameterCloseThreshold;
 
 - (void) computeCurve1;
 - (void) computeCurve2;
+- (void) clearCache;
 
 @end
 
@@ -67,6 +68,12 @@ extern const CGFloat FBParameterCloseThreshold;
     return _curve1LeftBezier;
 }
 
+- (FBBezierCurve *) curve1OverlappingBezier
+{
+    [self computeCurve1];
+    return _curve1MiddleBezier;
+}
+
 - (FBBezierCurve *) curve1RightBezier
 {
     [self computeCurve1];
@@ -77,6 +84,12 @@ extern const CGFloat FBParameterCloseThreshold;
 {
     [self computeCurve2];
     return _curve2LeftBezier;
+}
+
+- (FBBezierCurve *) curve2OverlappingBezier
+{
+    [self computeCurve2];
+    return _curve2MiddleBezier;
 }
 
 - (FBBezierCurve *) curve2RightBezier
@@ -90,14 +103,11 @@ extern const CGFloat FBParameterCloseThreshold;
     if ( !_needToComputeCurve1 )
         return;
     
-    NSArray *curves = [_curve1 splitSubcurvesWithRange:_parameterRange1];
-    if ( [curves objectAtIndex:0] != [NSNull null] )
-        _curve1LeftBezier = [[curves objectAtIndex:0] retain];
-    if ( [curves objectAtIndex:1] != [NSNull null] )
-        _curve1MiddleBezier = [[curves objectAtIndex:1] retain];
-    if ( [curves objectAtIndex:2] != [NSNull null] )
-        _curve1RightBezier = [[curves objectAtIndex:2] retain];
-        
+    [_curve1 splitSubcurvesWithRange:_parameterRange1 left:&_curve1LeftBezier middle:&_curve1MiddleBezier right:&_curve1RightBezier];
+    [_curve1LeftBezier retain]; // the out parameters are autoreleased
+    [_curve1MiddleBezier retain];
+    [_curve1RightBezier retain];
+    
     _needToComputeCurve1 = NO;
 }
 
@@ -106,13 +116,10 @@ extern const CGFloat FBParameterCloseThreshold;
     if ( !_needToComputeCurve2 )
         return;
     
-    NSArray *curves = [_curve2 splitSubcurvesWithRange:_parameterRange2];
-    if ( [curves objectAtIndex:0] != [NSNull null] )
-        _curve2LeftBezier = [[curves objectAtIndex:0] retain];
-    if ( [curves objectAtIndex:1] != [NSNull null] )
-        _curve2MiddleBezier = [[curves objectAtIndex:1] retain];
-    if ( [curves objectAtIndex:2] != [NSNull null] )
-        _curve2RightBezier = [[curves objectAtIndex:2] retain];
+    [_curve2 splitSubcurvesWithRange:_parameterRange2 left:&_curve2LeftBezier middle:&_curve2MiddleBezier right:&_curve2RightBezier];
+    [_curve2LeftBezier retain]; // the out parameters are autoreleased
+    [_curve2MiddleBezier retain];
+    [_curve2RightBezier retain];
     
     _needToComputeCurve2 = NO;
 }
@@ -140,6 +147,33 @@ extern const CGFloat FBParameterCloseThreshold;
 - (FBBezierIntersection *) middleIntersection
 {
     return [FBBezierIntersection intersectionWithCurve1:_curve1 parameter1:(_parameterRange1.minimum + _parameterRange1.maximum) / 2.0 curve2:_curve2 parameter2:(_parameterRange2.minimum + _parameterRange2.maximum) / 2.0];    
+}
+
+- (void) merge:(FBBezierIntersectRange *)other
+{
+    // We assume the caller already knows we're talking about the same curves
+    _parameterRange1 = FBRangeUnion(_parameterRange1, other->_parameterRange1);
+    _parameterRange2 = FBRangeUnion(_parameterRange2, other->_parameterRange2);
+    
+    [self clearCache];
+}
+
+- (void) clearCache
+{
+    _needToComputeCurve1 = YES;
+    _needToComputeCurve2 = YES;
+    [_curve1LeftBezier release];
+    _curve1LeftBezier = nil;
+    [_curve1MiddleBezier release];
+    _curve1MiddleBezier = nil;
+    [_curve1RightBezier release];
+    _curve1RightBezier = nil;
+    [_curve2LeftBezier release];
+    _curve2LeftBezier = nil;
+    [_curve2MiddleBezier release];
+    _curve2MiddleBezier = nil;
+    [_curve2RightBezier release];
+    _curve2RightBezier = nil;
 }
 
 - (NSString *) description

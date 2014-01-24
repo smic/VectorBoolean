@@ -10,8 +10,10 @@
 
 @class FBBezierCurve;
 @class FBEdgeCrossing;
-@class FBContourEdge;
 @class FBContourOverlap;
+@class FBCurveLocation;
+@class FBEdgeOverlap;
+@class FBBezierIntersection;
 
 typedef enum FBContourInside {
     FBContourInsideFilled,
@@ -31,6 +33,7 @@ FBContourDirection;
 @interface FBBezierContour : NSObject<NSCopying> {
     NSMutableArray*	_edges;
     NSRect			_bounds;
+    NSRect          _boundingRect;
     FBContourInside _inside;
     NSMutableArray  *_overlaps;
 	NSBezierPath*	_bezPathCache;	// GPC: added
@@ -46,8 +49,8 @@ FBContourDirection;
 - (void) addReverseCurve:(FBBezierCurve *)curve;
 - (void) addReverseCurveFrom:(FBEdgeCrossing *)startCrossing to:(FBEdgeCrossing *)endCrossing;
 
-- (NSArray *) intersectionsWithRay:(FBContourEdge *)testEdge;
-- (NSUInteger) numberOfIntersectionsWithRay:(FBContourEdge *)testEdge;
+- (void) intersectionsWithRay:(FBBezierCurve *)testEdge withBlock:(void (^)(FBBezierIntersection *intersection))block;
+- (NSUInteger) numberOfIntersectionsWithRay:(FBBezierCurve *)testEdge;
 - (BOOL) containsPoint:(NSPoint)point;
 - (void) markCrossingsAsEntryOrExitWithContour:(FBBezierContour *)otherContour markInside:(BOOL)markInside;
 
@@ -62,13 +65,24 @@ FBContourDirection;
 - (void) removeAllOverlaps;
 - (BOOL) isEquivalent:(FBBezierContour *)other;
 
+- (FBBezierCurve *) startEdge;
+- (NSPoint) testPointForContainment;
+
+- (FBCurveLocation *) closestLocationToPoint:(NSPoint)point;
+
 @property (readonly) NSArray *edges;
 @property (readonly) NSRect bounds;
+@property (readonly) NSRect boundingRect;
 @property (readonly) NSPoint firstPoint;
 @property FBContourInside inside;
 @property (readonly) NSArray *intersectingContours;
 
+- (BOOL) crossesOwnContour:(FBBezierContour *)contour;
 
 - (NSBezierPath*) debugPathForIntersectionType:(NSInteger) ti;
+
+- (void) forEachEdgeOverlapDo:(void (^)(FBEdgeOverlap *overlap))block;
+- (BOOL) doesOverlapContainCrossing:(FBEdgeCrossing *)crossing;
+- (BOOL) doesOverlapContainParameter:(CGFloat)parameter onEdge:(FBBezierCurve *)edge;
 
 @end

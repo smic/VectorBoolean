@@ -11,7 +11,7 @@
 #import "FBGeometry.h"
 
 static const CGFloat FBPointCloseThreshold = 1e-7;
-const CGFloat FBParameterCloseThreshold = 1e-5;
+const CGFloat FBParameterCloseThreshold = 1e-4;
 
 @interface FBBezierIntersection ()
 
@@ -112,12 +112,12 @@ const CGFloat FBParameterCloseThreshold = 1e-5;
 
 - (BOOL) isAtStartOfCurve1
 {
-    return FBAreValuesCloseWithOptions(_parameter1, 0.0, FBParameterCloseThreshold);
+    return FBAreValuesCloseWithOptions(_parameter1, 0.0, FBParameterCloseThreshold) || _curve1.isPoint;
 }
 
 - (BOOL) isAtStopOfCurve1
 {
-    return FBAreValuesCloseWithOptions(_parameter1, 1.0, FBParameterCloseThreshold);
+    return FBAreValuesCloseWithOptions(_parameter1, 1.0, FBParameterCloseThreshold) || _curve1.isPoint;
 }
 
 - (BOOL) isAtEndPointOfCurve1
@@ -127,12 +127,12 @@ const CGFloat FBParameterCloseThreshold = 1e-5;
 
 - (BOOL) isAtStartOfCurve2
 {
-    return FBAreValuesCloseWithOptions(_parameter2, 0.0, FBParameterCloseThreshold);
+    return FBAreValuesCloseWithOptions(_parameter2, 0.0, FBParameterCloseThreshold) || _curve2.isPoint;
 }
 
 - (BOOL) isAtStopOfCurve2
 {
-    return FBAreValuesCloseWithOptions(_parameter2, 1.0, FBParameterCloseThreshold);
+    return FBAreValuesCloseWithOptions(_parameter2, 1.0, FBParameterCloseThreshold) || _curve2.isPoint;
 }
 
 - (BOOL) isAtEndPointOfCurve2

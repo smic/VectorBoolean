@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @class FBBezierIntersection;
-@class FBContourEdge;
 @class FBBezierCurve;
 
 // FBEdgeCrossing is used by the boolean operations code to hold data about
@@ -18,8 +17,9 @@
 //  crossing's counterpart in the other FBBezierGraph
 @interface FBEdgeCrossing : NSObject {
     FBBezierIntersection *_intersection;
-    FBContourEdge *_edge;
+    FBBezierCurve *_edge;
     FBEdgeCrossing *_counterpart;
+    BOOL _fromCrossingOverlap;
     BOOL _entry;
     BOOL _processed;
     BOOL _selfCrossing;
@@ -31,17 +31,20 @@
 
 - (void) removeFromEdge;
 
-@property (assign) FBContourEdge *edge;
+@property (assign) FBBezierCurve *edge;
 @property (assign) FBEdgeCrossing *counterpart;
 @property (readonly) CGFloat order;
 @property (getter = isEntry) BOOL entry;
 @property (getter = isProcessed) BOOL processed;
 @property (getter = isSelfCrossing) BOOL selfCrossing;
+@property BOOL fromCrossingOverlap;
 @property NSUInteger index;
 
 // An easy way to iterate crossings. It doesn't wrap when it reaches the end.
 @property (readonly) FBEdgeCrossing *next;
 @property (readonly) FBEdgeCrossing *previous;
+@property (readonly) FBEdgeCrossing *nextNonself;
+@property (readonly) FBEdgeCrossing *previousNonself;
 
 // These properties pass through to the underlying intersection
 @property (readonly) CGFloat parameter;

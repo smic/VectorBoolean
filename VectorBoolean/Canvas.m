@@ -106,15 +106,14 @@ static NSRect BoxFrame(NSPoint point)
         
         for (FBBezierCurve *curve1 in curves1) {
             for (FBBezierCurve *curve2 in curves2) {
-                NSArray *intersections = [curve1 intersectionsWithBezierCurve:curve2];
-                for (FBBezierIntersection *intersection in intersections) {
+                [curve1 intersectionsWithBezierCurve:curve2 overlapRange:nil withBlock:^(FBBezierIntersection *intersection, BOOL *stop) {
                     if ( intersection.isTangent )
                         [[NSColor purpleColor] set];
                     else
                         [[NSColor greenColor] set];
                     NSBezierPath *circle = [NSBezierPath bezierPathWithOvalInRect:BoxFrame(intersection.location)];
                     [circle stroke];
-                }
+                }];
             }
         }
     }

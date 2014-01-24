@@ -35,12 +35,14 @@
 @property (readonly) FBRange parameterRange1;
 @property (readonly) FBBezierCurve *curve1LeftBezier;
 @property (readonly) FBBezierCurve *curve1RightBezier;
+@property (readonly) FBBezierCurve *curve1OverlappingBezier;
 
 @property (readonly, retain) FBBezierCurve *curve2;
 @property (readonly) FBRange parameterRange2;
 @property (readonly) BOOL reversed;
 @property (readonly) FBBezierCurve *curve2LeftBezier;
 @property (readonly) FBBezierCurve *curve2RightBezier;
+@property (readonly) FBBezierCurve *curve2OverlappingBezier;
 
 @property (readonly) FBBezierIntersection *middleIntersection;
 
@@ -48,5 +50,7 @@
 @property (readonly, getter = isAtStopOfCurve1) BOOL atStopOfCurve1;
 @property (readonly, getter = isAtStartOfCurve2) BOOL atStartOfCurve2;
 @property (readonly, getter = isAtStopOfCurve2) BOOL atStopOfCurve2;
+
+- (void) merge:(FBBezierIntersectRange *)other;
 
 @end

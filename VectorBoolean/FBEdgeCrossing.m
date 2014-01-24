@@ -7,8 +7,8 @@
 //
 
 #import "FBEdgeCrossing.h"
-#import "FBContourEdge.h"
 #import "FBBezierCurve.h"
+#import "FBBezierCurve+Edge.h"
 #import "FBBezierIntersection.h"
 
 @implementation FBEdgeCrossing
@@ -19,6 +19,7 @@
 @synthesize processed=_processed;
 @synthesize selfCrossing=_selfCrossing;
 @synthesize index=_index;
+@synthesize fromCrossingOverlap=_fromCrossingOverlap;
 
 + (id) crossingWithIntersection:(FBBezierIntersection *)intersection
 {
@@ -55,23 +56,33 @@
 
 - (FBEdgeCrossing *) next
 {
-    if ( _index >= ([self.edge.crossings count] - 1) )
-        return nil;
-    
-    return [self.edge.crossings objectAtIndex:_index + 1];
+    return [self.edge nextCrossing:self];
 }
 
 - (FBEdgeCrossing *) previous
 {
-    if ( _index == 0 )
-        return nil;
-    
-    return [self.edge.crossings objectAtIndex:_index - 1];
+    return [self.edge previousCrossing:self];
+}
+
+- (FBEdgeCrossing *) nextNonself
+{
+    FBEdgeCrossing *next = self.next;
+    while ( next != nil && next.isSelfCrossing )
+        next = next.next;
+    return next;
+}
+
+- (FBEdgeCrossing *) previousNonself
+{
+    FBEdgeCrossing *previous = self.previous;
+    while ( previous != nil && previous.isSelfCrossing )
+        previous = previous.previous;
+    return previous;
 }
 
 - (CGFloat) parameter
 {
-    if ( self.edge.curve == _intersection.curve1 )
+    if ( self.edge == _intersection.curve1 )
         return _intersection.parameter1;
     
     return _intersection.parameter2;
@@ -84,7 +95,7 @@
 
 - (FBBezierCurve *) curve
 {
-    return self.edge.curve;
+    return self.edge;
 }
 
 - (FBBezierCurve *) leftCurve
@@ -92,7 +103,7 @@
     if ( self.isAtStart )
         return nil;
     
-    if ( self.edge.curve == _intersection.curve1 )
+    if ( self.edge == _intersection.curve1 )
         return _intersection.curve1LeftBezier;
     
     return _intersection.curve2LeftBezier;
@@ -103,7 +114,7 @@
     if ( self.isAtEnd )
         return nil;
     
-    if ( self.edge.curve == _intersection.curve1 )
+    if ( self.edge == _intersection.curve1 )
         return _intersection.curve1RightBezier;
     
     return _intersection.curve2RightBezier;
@@ -111,7 +122,7 @@
 
 - (BOOL) isAtStart
 {
-    if ( self.edge.curve == _intersection.curve1 )
+    if ( self.edge == _intersection.curve1 )
         return _intersection.isAtStartOfCurve1;
     
     return _intersection.isAtStartOfCurve2;
@@ -119,7 +130,7 @@
 
 - (BOOL) isAtEnd
 {
-    if ( self.edge.curve == _intersection.curve1 )
+    if ( self.edge == _intersection.curve1 )
         return _intersection.isAtStopOfCurve1;
     
     return _intersection.isAtStopOfCurve2;

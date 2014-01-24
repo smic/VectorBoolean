@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class FBBezierContour;
+@class FBCurveLocation;
 
 // FBBezierGraph is more or less an exploded version of an NSBezierPath, and
 //  the two can be converted between easily. FBBezierGraph allows boolean
@@ -31,12 +32,16 @@
 - (NSBezierPath *) bezierPath;
 
 @property (readonly) NSArray* contours;
+@property (readonly) NSRect bounds;
+
+- (FBCurveLocation *) closestLocationToPoint:(NSPoint)point;
 
 - (void) debuggingInsertCrossingsForUnionWithBezierGraph:(FBBezierGraph *)otherGraph;
 - (void) debuggingInsertCrossingsForIntersectWithBezierGraph:(FBBezierGraph *)otherGraph;
 - (void) debuggingInsertCrossingsForDifferenceWithBezierGraph:(FBBezierGraph *)otherGraph;
 - (void) debuggingInsertIntersectionsWithBezierGraph:(FBBezierGraph *)otherGraph;
 - (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)contour;
+- (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)testContour transform:(NSAffineTransform *)transform;
 - (NSBezierPath *) debugPathForJointsOfContour:(FBBezierContour *)testContour;
 
 @end

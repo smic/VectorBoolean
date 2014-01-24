@@ -9,6 +9,8 @@
 #import "FBGeometry.h"
 
 static const CGFloat FBPointClosenessThreshold = 1e-10;
+static const CGFloat FBTangentClosenessThreshold = 1e-12;
+static const CGFloat FBBoundsClosenessThreshold = 1e-9;
 
 
 CGFloat FBDistanceBetweenPoints(NSPoint point1, NSPoint point2)
@@ -211,16 +213,54 @@ FBAngleRange FBAngleRangeMake(CGFloat minimum, CGFloat maximum)
     return range;
 }
 
+static BOOL FBIsValueGreaterThanWithOptions(CGFloat value, CGFloat minimum, CGFloat threshold)
+{
+    if ( FBAreValuesCloseWithOptions(value, minimum, threshold) )
+        return NO;
+    return value > minimum;
+}
+
+BOOL FBIsValueGreaterThan(CGFloat value, CGFloat minimum)
+{
+    return FBIsValueGreaterThanWithOptions(value, minimum, FBTangentClosenessThreshold);
+}
+
+BOOL FBIsValueLessThan(CGFloat value, CGFloat maximum)
+{
+    if ( FBAreValuesCloseWithOptions(value, maximum, FBTangentClosenessThreshold) )
+        return NO;
+    return value < maximum;
+}
+
+BOOL FBIsValueGreaterThanEqual(CGFloat value, CGFloat minimum)
+{
+    if ( FBAreValuesCloseWithOptions(value, minimum, FBTangentClosenessThreshold) )
+        return YES;
+    return value >= minimum;
+}
+
+static BOOL FBIsValueLessThanEqualWithOptions(CGFloat value, CGFloat maximum, CGFloat threshold)
+{
+    if ( FBAreValuesCloseWithOptions(value, maximum, threshold) )
+        return YES;
+    return value <= maximum;
+}
+
+BOOL FBIsValueLessThanEqual(CGFloat value, CGFloat maximum)
+{
+    return FBIsValueLessThanEqualWithOptions(value, maximum, FBTangentClosenessThreshold);
+}
+
 BOOL FBAngleRangeContainsAngle(FBAngleRange range, CGFloat angle)
 {
     if ( range.minimum <= range.maximum )
-        return angle > range.minimum && angle < range.maximum;
+        return FBIsValueGreaterThan(angle, range.minimum) && FBIsValueLessThan(angle, range.maximum);
     
     // The range wraps around 0. See if the angle falls in the first half
-    if ( angle > range.minimum && angle <= FB2PI )
+    if ( FBIsValueGreaterThan(angle, range.minimum) && angle <= FB2PI )
         return YES;
     
-    return angle >= 0.0 && angle < range.maximum;
+    return angle >= 0.0 && FBIsValueLessThan(angle, range.maximum);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -255,6 +295,19 @@ CGFloat FBRangeScaleNormalizedValue(FBRange range, CGFloat value)
     return (range.maximum - range.minimum) * value + range.minimum;
 }
 
+FBRange FBRangeUnion(FBRange range1, FBRange range2)
+{
+    FBRange range = { MIN(range1.minimum, range2.minimum), MAX(range1.maximum, range2.maximum) };
+    return range;
+}
+
+BOOL FBAreTangentsAmbigious(NSPoint edge1Tangents[2], NSPoint edge2Tangents[2])
+{
+    NSPoint normalEdge1[2] = { FBNormalizePoint(edge1Tangents[0]), FBNormalizePoint(edge1Tangents[1]) };
+    NSPoint normalEdge2[2] = { FBNormalizePoint(edge2Tangents[0]), FBNormalizePoint(edge2Tangents[1]) };
+    
+    return FBArePointsCloseWithOptions(normalEdge1[0], normalEdge2[0], FBTangentClosenessThreshold) || FBArePointsCloseWithOptions(normalEdge1[0], normalEdge2[1], FBTangentClosenessThreshold) || FBArePointsCloseWithOptions(normalEdge1[1], normalEdge2[0], FBTangentClosenessThreshold) || FBArePointsCloseWithOptions(normalEdge1[1], normalEdge2[1], FBTangentClosenessThreshold);
+}
 
 BOOL FBTangentsCross(NSPoint edge1Tangents[2], NSPoint edge2Tangents[2])
 {    
@@ -280,4 +333,16 @@ BOOL FBTangentsCross(NSPoint edge1Tangents[2], NSPoint edge2Tangents[2])
     
     // If each pair of angles split the other two, then the edges cross.
     return rangeCount1 == 1 && rangeCount2 == 1;
+}
+
+
+BOOL FBLineBoundsMightOverlap(NSRect bounds1, NSRect bounds2)
+{
+    CGFloat left = MAX(NSMinX(bounds1), NSMinX(bounds2));
+    CGFloat right = MIN(NSMaxX(bounds1), NSMaxX(bounds2));
+    if ( FBIsValueGreaterThanWithOptions(left, right, FBBoundsClosenessThreshold) )
+        return NO; // no horizontal overlap
+    CGFloat top = MAX(NSMinY(bounds1), NSMinY(bounds2));
+    CGFloat bottom = MIN(NSMaxY(bounds1), NSMaxY(bounds2));
+    return FBIsValueLessThanEqualWithOptions(top, bottom, FBBoundsClosenessThreshold);
 }
