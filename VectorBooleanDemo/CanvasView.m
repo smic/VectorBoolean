@@ -16,7 +16,11 @@ static NSRect BoxFrame(NSPoint point)
     return NSMakeRect(floorf(point.x - 2) - 0.5, floorf(point.y - 2) - 0.5, 5, 5);
 }
 
-@implementation CanvasView
+@implementation CanvasView {
+    NSMutableArray *_paths;
+    BOOL _showPoints;
+    BOOL _showIntersections;
+}
 
 @synthesize showPoints=_showPoints;
 @synthesize showIntersections=_showIntersections;
@@ -31,13 +35,6 @@ static NSRect BoxFrame(NSPoint point)
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [_paths release];
-    
-    [super dealloc];
 }
 
 - (void) addPath:(NSBezierPath *)path withColor:(NSColor *)color

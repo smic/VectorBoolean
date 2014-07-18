@@ -10,11 +10,7 @@
 
 @class Canvas;
 
-@interface CanvasView : NSView  {
-    NSMutableArray *_paths;
-    BOOL _showPoints;
-    BOOL _showIntersections;
-}
+@interface CanvasView : NSView  
 
 - (void) addPath:(NSBezierPath *)path withColor:(NSColor *)color;
 - (void) clear;
