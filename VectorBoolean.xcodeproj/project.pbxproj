@@ -26,7 +26,6 @@
 		A1C48B511395FA390043E2C7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C48B4F1395FA390043E2C7 /* MainMenu.xib */; };
 		A1C48B621395FAE20043E2C7 /* NSBezierPath+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C48B5E1395FAE20043E2C7 /* NSBezierPath+Utilities.m */; };
 		A1C48B65139602480043E2C7 /* CanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C48B64139602480043E2C7 /* CanvasView.m */; };
-		A1C48B68139602820043E2C7 /* Canvas.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C48B67139602810043E2C7 /* Canvas.m */; };
 		A1DFCC6E1892EB950026A403 /* FBBezierCurve+Edge.m in Sources */ = {isa = PBXBuildFile; fileRef = A1DFCC6B1892EB950026A403 /* FBBezierCurve+Edge.m */; };
 		A1DFCC6F1892EB950026A403 /* FBCurveLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A1DFCC6D1892EB950026A403 /* FBCurveLocation.m */; };
 		D4B45DAB1978FCF400894280 /* FBBezierCurveLength.m in Sources */ = {isa = PBXBuildFile; fileRef = D4B45DAA1978FCF400894280 /* FBBezierCurveLength.m */; };
@@ -74,8 +73,6 @@
 		A1C48B5E1395FAE20043E2C7 /* NSBezierPath+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+Utilities.m"; sourceTree = "<group>"; };
 		A1C48B63139602480043E2C7 /* CanvasView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanvasView.h; sourceTree = "<group>"; };
 		A1C48B64139602480043E2C7 /* CanvasView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanvasView.m; sourceTree = "<group>"; };
-		A1C48B66139602800043E2C7 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Canvas.h; sourceTree = "<group>"; };
-		A1C48B67139602810043E2C7 /* Canvas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Canvas.m; sourceTree = "<group>"; };
 		A1DFCC6A1892EB950026A403 /* FBBezierCurve+Edge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBBezierCurve+Edge.h"; sourceTree = "<group>"; };
 		A1DFCC6B1892EB950026A403 /* FBBezierCurve+Edge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FBBezierCurve+Edge.m"; sourceTree = "<group>"; };
 		A1DFCC6C1892EB950026A403 /* FBCurveLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBCurveLocation.h; sourceTree = "<group>"; };
@@ -145,8 +142,6 @@
 				A1C48B4A1395FA390043E2C7 /* MyDocument.m */,
 				A1C48B63139602480043E2C7 /* CanvasView.h */,
 				A1C48B64139602480043E2C7 /* CanvasView.m */,
-				A1C48B66139602800043E2C7 /* Canvas.h */,
-				A1C48B67139602810043E2C7 /* Canvas.m */,
 				A192AB57139D8D5F00AF40BA /* FBGeometry.h */,
 				A192AB58139D8D6000AF40BA /* FBGeometry.m */,
 				A11131E313960B9D00C9395C /* NSBezierPath+Boolean.h */,
@@ -271,7 +266,6 @@
 				A1C48B621395FAE20043E2C7 /* NSBezierPath+Utilities.m in Sources */,
 				A1C48B65139602480043E2C7 /* CanvasView.m in Sources */,
 				D4B45DB419791D1400894280 /* FBBezierCurveHelper.m in Sources */,
-				A1C48B68139602820043E2C7 /* Canvas.m in Sources */,
 				A11131E513960B9D00C9395C /* NSBezierPath+Boolean.m in Sources */,
 				A192AB53139D843C00AF40BA /* FBBezierCurve.m in Sources */,
 				A192AB56139D863A00AF40BA /* FBBezierIntersection.m in Sources */,

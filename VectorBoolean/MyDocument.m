@@ -8,7 +8,6 @@
 
 #import "MyDocument.h"
 #import "CanvasView.h"
-#import "Canvas.h"
 #import "NSBezierPath+Boolean.h"
 
 @interface MyDocument ()
@@ -95,7 +94,7 @@
 
 - (IBAction) onReset:(id)sender
 {
-    [_view.canvas clear];
+    [_view clear];
     
     [self performSelector:_resetAction];
     
@@ -131,11 +130,11 @@
     NSBezierPath *holeyRectangle = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:holeyRectangle];
     [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:holeyRectangle];    
-    [_view.canvas addPath:holeyRectangle withColor:[NSColor blueColor]];
+    [_view addPath:holeyRectangle withColor:[NSColor blueColor]];
 
     NSBezierPath *rectangle = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(180, 5, 100, 400) toPath:rectangle];
-    [_view.canvas addPath:rectangle withColor:[NSColor redColor]];
+    [_view addPath:rectangle withColor:[NSColor redColor]];
 }
 
 - (void) addCircleOnTwoRectangles
@@ -143,7 +142,7 @@
     NSBezierPath *rectangles = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 5, 100, 400) toPath:rectangles];
     [self addRectangle:NSMakeRect(350, 5, 100, 400) toPath:rectangles];
-    [_view.canvas addPath:rectangles withColor:[NSColor blueColor]];
+    [_view addPath:rectangles withColor:[NSColor blueColor]];
 
     [self addCircleAtPoint:NSMakePoint(200, 200) withRadius:185];    
 }
@@ -152,7 +151,7 @@
 {
     NSBezierPath *circle = [NSBezierPath bezierPath];
     [self addCircleAtPoint:NSMakePoint(355, 240) withRadius:125 toPath:circle];
-    [_view.canvas addPath:circle withColor:[NSColor blueColor]];
+    [_view addPath:circle withColor:[NSColor blueColor]];
     
     [self addCircleAtPoint:NSMakePoint(210, 110) withRadius:100];
 }
@@ -169,8 +168,8 @@
     NSBezierPath *allParts = [holeyRectangle fb_union:rectangle];
     NSBezierPath *intersectingParts = [holeyRectangle fb_intersect:rectangle];
     
-    [_view.canvas addPath:allParts withColor:[NSColor blueColor]];
-    [_view.canvas addPath:intersectingParts withColor:[NSColor redColor]];
+    [_view addPath:allParts withColor:[NSColor blueColor]];
+    [_view addPath:intersectingParts withColor:[NSColor redColor]];
 }
 
 - (void) addComplexShapes2
@@ -185,8 +184,8 @@
     NSBezierPath *allParts = [rectangles fb_union:circle];
     NSBezierPath *intersectingParts = [rectangles fb_intersect:circle];
 
-    [_view.canvas addPath:allParts withColor:[NSColor blueColor]];
-    [_view.canvas addPath:intersectingParts withColor:[NSColor redColor]];
+    [_view addPath:allParts withColor:[NSColor blueColor]];
+    [_view addPath:intersectingParts withColor:[NSColor redColor]];
 }
 
 - (void) addTriangleInsideRectangle
@@ -214,7 +213,7 @@
     NSBezierPath *circles = [NSBezierPath bezierPath];
     [self addCircleAtPoint:NSMakePoint(200, 300) withRadius:85 toPath:circles];    
     [self addCircleAtPoint:NSMakePoint(200, 95) withRadius:85 toPath:circles];
-    [_view.canvas addPath:circles withColor:[NSColor redColor]];
+    [_view addPath:circles withColor:[NSColor redColor]];
 }
 
 - (void) addMoreNonOverlappingContours
@@ -222,12 +221,12 @@
     NSBezierPath *rectangles = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(100, 200, 200, 200) toPath:rectangles];
     [self addRectangle:NSMakeRect(175, 70, 50, 50) toPath:rectangles];    
-    [_view.canvas addPath:rectangles withColor:[NSColor blueColor]];
+    [_view addPath:rectangles withColor:[NSColor blueColor]];
 
     NSBezierPath *circles = [NSBezierPath bezierPath];
     [self addCircleAtPoint:NSMakePoint(200, 300) withRadius:85 toPath:circles];    
     [self addCircleAtPoint:NSMakePoint(200, 95) withRadius:85 toPath:circles];
-    [_view.canvas addPath:circles withColor:[NSColor redColor]];
+    [_view addPath:circles withColor:[NSColor redColor]];
 }
 
 - (void) addConcentricContours
@@ -235,7 +234,7 @@
     NSBezierPath *holeyRectangle = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:holeyRectangle];
     [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:holeyRectangle];    
-    [_view.canvas addPath:holeyRectangle withColor:[NSColor blueColor]];
+    [_view addPath:holeyRectangle withColor:[NSColor blueColor]];
 
     [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:140];
 }
@@ -245,7 +244,7 @@
     NSBezierPath *holeyRectangle = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:holeyRectangle];
     [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:holeyRectangle];    
-    [_view.canvas addPath:holeyRectangle withColor:[NSColor blueColor]];
+    [_view addPath:holeyRectangle withColor:[NSColor blueColor]];
     
     [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:70];
 }
@@ -255,11 +254,11 @@
     NSBezierPath *holeyRectangle = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:holeyRectangle];
     [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:holeyRectangle];    
-    [_view.canvas addPath:holeyRectangle withColor:[NSColor blueColor]];
+    [_view addPath:holeyRectangle withColor:[NSColor blueColor]];
 
     NSBezierPath *circle = [NSBezierPath bezierPath];
     [self addCircleAtPoint:NSMakePoint(180, 180) withRadius:125 toPath:circle];    
-    [_view.canvas addPath:circle withColor:[NSColor redColor]];
+    [_view addPath:circle withColor:[NSColor redColor]];
 }
 
 - (void) addHoleOverlappingHole
@@ -267,13 +266,13 @@
     NSBezierPath *holeyRectangle1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:holeyRectangle1];
     [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:holeyRectangle1];    
-    [_view.canvas addPath:holeyRectangle1 withColor:[NSColor blueColor]];
+    [_view addPath:holeyRectangle1 withColor:[NSColor blueColor]];
     
     
     NSBezierPath *holeyRectangle2 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(225, 65, 160, 160) toPath:holeyRectangle2];
     [self addCircleAtPoint:NSMakePoint(305, 145) withRadius:65 toPath:holeyRectangle2];    
-    [_view.canvas addPath:holeyRectangle2 withColor:[NSColor redColor]];
+    [_view addPath:holeyRectangle2 withColor:[NSColor redColor]];
 }
 
 - (void) addCurvyShapeOverlappingRectangle
@@ -285,7 +284,7 @@
     [rectangle lineToPoint:NSMakePoint(410, 50)];
     [rectangle lineToPoint:NSMakePoint(40, 50)];
     [rectangle lineToPoint:NSMakePoint(40, top)];
-    [_view.canvas addPath:rectangle withColor:[NSColor redColor]];
+    [_view addPath:rectangle withColor:[NSColor redColor]];
     
     NSBezierPath *curveyShape = [NSBezierPath bezierPath];
     [curveyShape moveToPoint:NSMakePoint(335.000000, 203.000000)];
@@ -294,35 +293,35 @@
     [curveyShape curveToPoint:NSMakePoint(240.000000, 145.000000) controlPoint1:NSMakePoint(252.000000, 102.000000) controlPoint2:NSMakePoint(240.000000, 122.000000)];
     [curveyShape curveToPoint:NSMakePoint(305.000000, 210.000000) controlPoint1:NSMakePoint(240.000000, 181.000000) controlPoint2:NSMakePoint(269.000000, 210.000000)];
     [curveyShape curveToPoint:NSMakePoint(335.000000, 203.000000) controlPoint1:NSMakePoint(316.000000, 210.000000) controlPoint2:NSMakePoint(326.000000, 207.000000)];
-    [_view.canvas addPath:curveyShape withColor:[NSColor blueColor]];
+    [_view addPath:curveyShape withColor:[NSColor blueColor]];
 }
 
 - (void) addRectangle:(NSRect)rect
 {
     NSBezierPath *rectangle = [NSBezierPath bezierPath];
     [self addRectangle:rect toPath:rectangle];
-    [_view.canvas addPath:rectangle withColor:[NSColor blueColor]];
+    [_view addPath:rectangle withColor:[NSColor blueColor]];
 }
 
 - (void) addCircleAtPoint:(NSPoint)center withRadius:(CGFloat)radius
 {
     NSBezierPath *circle = [NSBezierPath bezierPath];
     [self addCircleAtPoint:center withRadius:radius toPath:circle];
-    [_view.canvas addPath:circle withColor:[NSColor redColor]];
+    [_view addPath:circle withColor:[NSColor redColor]];
 }
 
 - (void) addTriangle:(NSPoint)point1 point2:(NSPoint)point2 point3:(NSPoint)point3
 {
     NSBezierPath *triangle = [NSBezierPath bezierPath];
     [self addTriangle:point1 point2:point2 point3:point3 toPath:triangle];
-    [_view.canvas addPath:triangle withColor:[NSColor redColor]];
+    [_view addPath:triangle withColor:[NSColor redColor]];
 }
 
 - (void) addQuadrangle:(NSPoint)point1 point2:(NSPoint)point2 point3:(NSPoint)point3 point4:(NSPoint)point4
 {
     NSBezierPath *quandrangle = [NSBezierPath bezierPath];
     [self addQuadrangle:point1 point2:point2 point3:point3 point4:point4 toPath:quandrangle];
-    [_view.canvas addPath:quandrangle withColor:[NSColor redColor]];
+    [_view addPath:quandrangle withColor:[NSColor redColor]];
 }
 
 - (void) addRectangle:(NSRect)rect toPath:(NSBezierPath *)rectangle
@@ -363,36 +362,36 @@
 {
     [self onReset:sender];
     
-    NSBezierPath *result = [[_view.canvas pathAtIndex:0] fb_union:[_view.canvas pathAtIndex:1]];
-    [_view.canvas clear];
-    [_view.canvas addPath:result withColor:[NSColor blueColor]];
+    NSBezierPath *result = [[_view pathAtIndex:0] fb_union:[_view pathAtIndex:1]];
+    [_view clear];
+    [_view addPath:result withColor:[NSColor blueColor]];
 }
 
 - (IBAction) onIntersect:(id)sender
 {
     [self onReset:sender];
     
-    NSBezierPath *result = [[_view.canvas pathAtIndex:0] fb_intersect:[_view.canvas pathAtIndex:1]];
-    [_view.canvas clear];
-    [_view.canvas addPath:result withColor:[NSColor blueColor]];
+    NSBezierPath *result = [[_view pathAtIndex:0] fb_intersect:[_view pathAtIndex:1]];
+    [_view clear];
+    [_view addPath:result withColor:[NSColor blueColor]];
 }
 
 - (IBAction) onDifference:(id)sender // Punch
 {
     [self onReset:sender];
     
-    NSBezierPath *result = [[_view.canvas pathAtIndex:0] fb_difference:[_view.canvas pathAtIndex:1]];
-    [_view.canvas clear];
-    [_view.canvas addPath:result withColor:[NSColor blueColor]];
+    NSBezierPath *result = [[_view pathAtIndex:0] fb_difference:[_view pathAtIndex:1]];
+    [_view clear];
+    [_view addPath:result withColor:[NSColor blueColor]];
 }
 
 - (IBAction) onJoin:(id)sender // XOR
 {
     [self onReset:sender];
     
-    NSBezierPath *result = [[_view.canvas pathAtIndex:0] fb_xor:[_view.canvas pathAtIndex:1]];
-    [_view.canvas clear];
-    [_view.canvas addPath:result withColor:[NSColor blueColor]];
+    NSBezierPath *result = [[_view pathAtIndex:0] fb_xor:[_view pathAtIndex:1]];
+    [_view clear];
+    [_view addPath:result withColor:[NSColor blueColor]];
 }
 
 - (IBAction) onCircleOverlappingRectangle:(id)sender
@@ -511,13 +510,13 @@
 
 - (IBAction) onShowPoints:(id)sender
 {
-    _view.canvas.showPoints = !_view.canvas.showPoints;
+    _view.showPoints = !_view.showPoints;
     [_view setNeedsDisplay:YES];
 }
 
 - (IBAction) onShowIntersections:(id)sender
 {
-    _view.canvas.showIntersections = !_view.canvas.showIntersections;
+    _view.showIntersections = !_view.showIntersections;
     [_view setNeedsDisplay:YES];    
 }
 
@@ -563,9 +562,9 @@
     } else if ( [anItem action] == @selector(onCurvyShapeOverlappingRectangle:) ) {
         [menuItem setState:_resetAction == @selector(addCurvyShapeOverlappingRectangle) ? NSOnState : NSOffState];
     } else if ( [anItem action] == @selector(onShowPoints:) ) {
-        [menuItem setState:_view.canvas.showPoints ? NSOnState : NSOffState];
+        [menuItem setState:_view.showPoints ? NSOnState : NSOffState];
     } else if ( [anItem action] == @selector(onShowIntersections:) ) {
-        [menuItem setState:_view.canvas.showIntersections ? NSOnState : NSOffState];
+        [menuItem setState:_view.showIntersections ? NSOnState : NSOffState];
     }
 
     
