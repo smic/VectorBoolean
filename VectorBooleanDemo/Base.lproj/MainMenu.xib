@@ -770,7 +770,7 @@
                                     <menuItem title="Intersect" id="fMk-Wu-2Vt">
                                         <modifierMask key="keyEquivalentModifierMask"/>
                                     </menuItem>
-                                    <menuItem title="Join" id="Lh6-s2-w3e">
+                                    <menuItem title="XOR" id="Lh6-s2-w3e">
                                         <modifierMask key="keyEquivalentModifierMask"/>
                                     </menuItem>
                                 </items>

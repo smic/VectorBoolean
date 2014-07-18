@@ -16,22 +16,21 @@ static NSRect BoxFrame(NSPoint point)
     return NSMakeRect(floorf(point.x - 2) - 0.5, floorf(point.y - 2) - 0.5, 5, 5);
 }
 
-@implementation CanvasView {
-    NSMutableArray *_paths;
-    BOOL _showPoints;
-    BOOL _showIntersections;
-}
+@interface CanvasView ()
 
-@synthesize showPoints=_showPoints;
-@synthesize showIntersections=_showIntersections;
+@property (nonatomic, strong) NSMutableArray *paths;
+
+@end
+
+@implementation CanvasView
 
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _paths = [[NSMutableArray alloc] initWithCapacity:3];
-        _showPoints = YES;
-        _showIntersections = YES;
+        self.paths = [[NSMutableArray alloc] initWithCapacity:3];
+        self.showPoints = YES;
+        self.showIntersections = YES;
     }
     
     return self;
@@ -39,24 +38,22 @@ static NSRect BoxFrame(NSPoint point)
 
 - (void) addPath:(NSBezierPath *)path withColor:(NSColor *)color
 {
-    NSDictionary *object = [NSDictionary dictionaryWithObjectsAndKeys:path, @"path", color, @"color", nil];
-    [_paths addObject:object];
+    [self.paths addObject:@{@"path": path, @"color": color}];
 }
 
 - (NSUInteger) numberOfPaths
 {
-    return [_paths count];
+    return [self.paths count];
 }
 
 - (NSBezierPath *) pathAtIndex:(NSUInteger)index
 {
-    NSDictionary *object = [_paths objectAtIndex:index];
-    return [object objectForKey:@"path"];
+    return self.paths[index][@"path"];
 }
 
 - (void) clear
 {
-    [_paths removeAllObjects];
+    [self.paths removeAllObjects];
 }
 
 - (void) drawRect:(NSRect)dirtyRect
@@ -66,17 +63,17 @@ static NSRect BoxFrame(NSPoint point)
     [NSBezierPath fillRect:dirtyRect];
     
     // Draw on the objects
-    for (NSDictionary *object in _paths) {
-        NSColor *color = [object objectForKey:@"color"];
-        NSBezierPath *path = [object objectForKey:@"path"];
+    for (NSDictionary *object in self.paths) {
+        NSColor *color = object[@"color"];
+        NSBezierPath *path = object[@"path"];
         [color set];
         [path fill];
     }
     
     // Draw on the end and control points
-    if ( _showPoints ) {
-        for (NSDictionary *object in _paths) {
-            NSBezierPath *path = [object objectForKey:@"path"];
+    if ( self.showPoints ) {
+        for (NSDictionary *object in self.paths) {
+            NSBezierPath *path = object[@"path"];
             [NSBezierPath setDefaultLineWidth:1.0];
             [NSBezierPath setDefaultLineCapStyle:NSButtLineCapStyle];
             [NSBezierPath setDefaultLineJoinStyle:NSMiterLineJoinStyle];
@@ -95,9 +92,9 @@ static NSRect BoxFrame(NSPoint point)
     }
     
     // If we have exactly two objects, show where they intersect
-    if ( _showIntersections && [_paths count] == 2 ) {
-        NSBezierPath *path1 = [[_paths objectAtIndex:0] objectForKey:@"path"];
-        NSBezierPath *path2 = [[_paths objectAtIndex:1] objectForKey:@"path"];
+    if ( self.showIntersections && [self.paths count] == 2 ) {
+        NSBezierPath *path1 = self.paths[0][@"path"];
+        NSBezierPath *path2 = self.paths[1][@"path"];
         NSArray *curves1 = [FBBezierCurve bezierCurvesFromBezierPath:path1];
         NSArray *curves2 = [FBBezierCurve bezierCurvesFromBezierPath:path2];
         

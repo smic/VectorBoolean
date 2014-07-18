@@ -376,34 +376,34 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
 }
 
 - (void)upateView {
-    [_view clear];
+    [self.view clear];
     switch (self.booleanType) {
         case BooleanTypeNone: {
-            [_view addPath:self.path1 withColor:[NSColor blueColor]];
-            [_view addPath:self.path2 withColor:[NSColor redColor]];
+            [self.view addPath:self.path1 withColor:[NSColor blueColor]];
+            [self.view addPath:self.path2 withColor:[NSColor redColor]];
         } break;
             
         case BooleanTypeUnion: {
             NSBezierPath *result = [self.path1 fb_union:self.path2];
-            [_view addPath:result withColor:[NSColor purpleColor]];
+            [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeDifference: {
             NSBezierPath *result = [self.path1 fb_difference:self.path2];
-            [_view addPath:result withColor:[NSColor purpleColor]];
+            [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeIntersect: {
             NSBezierPath *result = [self.path1 fb_intersect:self.path2];
-            [_view addPath:result withColor:[NSColor purpleColor]];
+            [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeXOR: {
             NSBezierPath *result = [self.path1 fb_xor:self.path2];
-            [_view addPath:result withColor:[NSColor purpleColor]];
+            [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
             
         default:
             break;
     }
-    [_view setNeedsDisplay:YES];
+    [self.view setNeedsDisplay:YES];
 }
 
 - (IBAction)onChooseExample:(id)sender {
@@ -416,14 +416,14 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
 
 - (IBAction)onShowPoints:(id)sender
 {
-    _view.showPoints = !_view.showPoints;
-    [_view setNeedsDisplay:YES];
+    self.view.showPoints = !self.view.showPoints;
+    [self.view setNeedsDisplay:YES];
 }
 
 - (IBAction)onShowIntersections:(id)sender
 {
-    _view.showIntersections = !_view.showIntersections;
-    [_view setNeedsDisplay:YES];
+    self.view.showIntersections = !self.view.showIntersections;
+    [self.view setNeedsDisplay:YES];
 }
 
 @end
