@@ -121,31 +121,31 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     [self upateView];
 }
 
-- (void) addSomeOverlap
+- (void)addSomeOverlap
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 300, 200)];
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(355, 240) withRadius:125];
 }
 
-- (void) addCircleInRectangle
+- (void)addCircleInRectangle
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 350, 300)];
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 200) withRadius:125];
 }
 
-- (void) addRectangleInCircle
+- (void)addRectangleInCircle
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(150, 150, 150, 150)];
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:185];
 }
 
-- (void) addCircleOnRectangle
+- (void)addCircleOnRectangle
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(15, 15, 370, 370)];
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:185];
 }
 
-- (void) addHoleyRectangleWithRectangle
+- (void)addHoleyRectangleWithRectangle
 {
     NSBezierPath *path1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
@@ -157,7 +157,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = path2;
 }
 
-- (void) addCircleOnTwoRectangles
+- (void)addCircleOnTwoRectangles
 {
     NSBezierPath *rectangles = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 5, 100, 400) toPath:rectangles];
@@ -167,7 +167,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:185];
 }
 
-- (void) addCircleOverlappingCircle
+- (void)addCircleOverlappingCircle
 {
     NSBezierPath *circle = [NSBezierPath bezierPath];
     [self addCircleAtPoint:NSMakePoint(355, 240) withRadius:125 toPath:circle];
@@ -176,7 +176,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 110) withRadius:100];
 }
 
-- (void) addComplexShapes
+- (void)addComplexShapes
 {
     NSBezierPath *part1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:part1];
@@ -191,7 +191,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = intersectingParts;
 }
 
-- (void) addComplexShapes2
+- (void)addComplexShapes2
 {
     NSBezierPath *part1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 5, 100, 400) toPath:part1];
@@ -207,25 +207,25 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = intersectingParts;
 }
 
-- (void) addTriangleInsideRectangle
+- (void)addTriangleInsideRectangle
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(100, 100, 300, 300)];
     self.path2 = [self pathWithTriangle:NSMakePoint(100, 400) point2:NSMakePoint(400, 400) point3:NSMakePoint(250, 250)];
 }
 
-- (void) addDiamondOverlappingRectangle
+- (void)addDiamondOverlappingRectangle
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 200, 200)];
     self.path2 = [self pathWithQuadrangle:NSMakePoint(50, 250) point2:NSMakePoint(150, 400) point3:NSMakePoint(250, 250) point4:NSMakePoint(150, 100)];
 }
 
-- (void) addDiamondInsideRectangle
+- (void)addDiamondInsideRectangle
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(100, 100, 300, 300)];
     self.path2 = [self pathWithQuadrangle:NSMakePoint(100, 250) point2:NSMakePoint(250, 400) point3:NSMakePoint(400, 250) point4:NSMakePoint(250, 100)];
 }
 
-- (void) addNonOverlappingContours
+- (void)addNonOverlappingContours
 {
     self.path1 = [self pathWithRectangle:NSMakeRect(100, 200, 200, 200)];
     
@@ -235,7 +235,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = path2;
 }
 
-- (void) addMoreNonOverlappingContours
+- (void)addMoreNonOverlappingContours
 {
     NSBezierPath *path1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(100, 200, 200, 200) toPath:path1];
@@ -248,7 +248,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = path2;
 }
 
-- (void) addConcentricContours
+- (void)addConcentricContours
 {
     NSBezierPath *path1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
@@ -258,17 +258,17 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 200) withRadius:140];
 }
 
-- (void) addMoreConcentricContours
+- (void)addMoreConcentricContours
 {
-    NSBezierPath *holeyRectangle = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:holeyRectangle];
-    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:holeyRectangle];
-    self.path1 = holeyRectangle;
+    NSBezierPath *path1 = [NSBezierPath bezierPath];
+    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
+    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:path1];
+    self.path1 = path1;
     
     self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 200) withRadius:70];
 }
 
-- (void) addOverlappingHole
+- (void)addOverlappingHole
 {
     NSBezierPath *path1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
@@ -280,7 +280,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = path2;
 }
 
-- (void) addHoleOverlappingHole
+- (void)addHoleOverlappingHole
 {
     NSBezierPath *path1 = [NSBezierPath bezierPath];
     [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
@@ -293,7 +293,7 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     self.path2 = path2;
 }
 
-- (void) addCurvyShapeOverlappingRectangle
+- (void)addCurvyShapeOverlappingRectangle
 {
     NSBezierPath *path1 = [NSBezierPath bezierPath];
     CGFloat top = 65.0 + 160.0 / 3.0;
