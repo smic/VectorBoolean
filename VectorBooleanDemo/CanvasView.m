@@ -66,8 +66,11 @@ static NSRect BoxFrame(NSPoint point)
     for (NSDictionary *object in self.paths) {
         NSColor *color = object[@"color"];
         NSBezierPath *path = object[@"path"];
-        [color set];
+        [[color highlightWithLevel:0.3] set];
         [path fill];
+		
+		[color set];
+		[path stroke];
     }
     
     // Draw on the end and control points
@@ -80,9 +83,14 @@ static NSRect BoxFrame(NSPoint point)
             
             for (NSInteger i = 0; i < [path elementCount]; i++) {
                 NSBezierElement element = [path fb_elementAtIndex:i];
-                [[NSColor orangeColor] set];
-                [NSBezierPath strokeRect:BoxFrame(element.point)];
+                [[NSColor whiteColor] set];
+                [NSBezierPath fillRect:BoxFrame(element.point)];
+				[[NSColor orangeColor] set];
+				[NSBezierPath strokeRect:BoxFrame(element.point)];
                 if ( element.kind == NSCurveToBezierPathElement ) {
+					[[NSColor whiteColor] set];
+					[NSBezierPath fillRect:BoxFrame(element.controlPoints[0])];
+					[NSBezierPath fillRect:BoxFrame(element.controlPoints[1])];
                     [[NSColor blackColor] set];
                     [NSBezierPath strokeRect:BoxFrame(element.controlPoints[0])];
                     [NSBezierPath strokeRect:BoxFrame(element.controlPoints[1])];
@@ -97,15 +105,18 @@ static NSRect BoxFrame(NSPoint point)
         NSBezierPath *path2 = self.paths[1][@"path"];
         NSArray *curves1 = [FBBezierCurve bezierCurvesFromBezierPath:path1];
         NSArray *curves2 = [FBBezierCurve bezierCurvesFromBezierPath:path2];
-        
+		
         for (FBBezierCurve *curve1 in curves1) {
             for (FBBezierCurve *curve2 in curves2) {
                 [curve1 intersectionsWithBezierCurve:curve2 overlapRange:nil withBlock:^(FBBezierIntersection *intersection, BOOL *stop) {
-                    if ( intersection.isTangent )
-                        [[NSColor purpleColor] set];
-                    else
-                        [[NSColor greenColor] set];
                     NSBezierPath *circle = [NSBezierPath bezierPathWithOvalInRect:BoxFrame(intersection.location)];
+					
+					[[NSColor whiteColor] set];
+					[circle fill];
+					if ( intersection.isTangent )
+						[[NSColor purpleColor] set];
+					else
+						[[NSColor greenColor] set];
                     [circle stroke];
                 }];
             }

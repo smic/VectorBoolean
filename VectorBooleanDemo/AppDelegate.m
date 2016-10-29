@@ -11,9 +11,8 @@
 
 typedef NS_ENUM(NSUInteger, BooleanType) {
     BooleanTypeNone = 0,
-    BooleanTypeSeparator,
     BooleanTypeUnion,
-    BooleanTypeDifference,
+	BooleanTypeDifference,
     BooleanTypeIntersect,
     BooleanTypeXOR,
 };
@@ -129,8 +128,8 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
 
 - (void)addCircleInRectangle
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 350, 300)];
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 200) withRadius:125];
+    self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 300, 300)];
+    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:150];
 }
 
 - (void)addRectangleInCircle
@@ -384,18 +383,22 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
         } break;
             
         case BooleanTypeUnion: {
+			NSLog(@"Union");
             NSBezierPath *result = [self.path1 fb_union:self.path2];
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeDifference: {
+			NSLog(@"Difference");
             NSBezierPath *result = [self.path1 fb_difference:self.path2];
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeIntersect: {
+			NSLog(@"Intersect");
             NSBezierPath *result = [self.path1 fb_intersect:self.path2];
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeXOR: {
+			NSLog(@"XOR");
             NSBezierPath *result = [self.path1 fb_xor:self.path2];
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
@@ -408,6 +411,27 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
 
 - (IBAction)onChooseExample:(id)sender {
     [self updatePaths];
+}
+
+- (IBAction)onChooseNextExample:(id)sender {
+	NSUInteger exampleIndex = self.exampleIndex;
+	NSLog(@"BEFORE: %lu", exampleIndex);
+	NSLog(@"tag: %li", [sender selectedSegment]);
+	if ([sender selectedSegment] == 0) {
+		if (exampleIndex == 0) {
+			self.exampleIndex = 18;
+		} else {
+			self.exampleIndex = exampleIndex - 1;
+		}
+	} else {
+		if (exampleIndex == 18) {
+			self.exampleIndex = 0;
+		} else {
+			self.exampleIndex = exampleIndex + 1;
+		}
+	}
+	[self updatePaths];
+	NSLog(@"AFTER: %lu", self.exampleIndex);
 }
 
 - (IBAction)onChooseBooleanType:(id)sender {
