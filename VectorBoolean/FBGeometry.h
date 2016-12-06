@@ -6,7 +6,8 @@
 //  Copyright 2011 Fortunate Bear, LLC. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 
 CGFloat FBDistanceBetweenPoints(CGPoint point1, CGPoint point2);

@@ -8,7 +8,7 @@
 
 #import "FBBezierGraph.h"
 #import "FBBezierCurve.h"
-#import "NSBezierPath+Utilities.h"
+#import "CGPath+Utilities.h"
 #import "FBBezierContour.h"
 #import "FBBezierCurve+Edge.h"
 #import "FBBezierIntersection.h"
@@ -78,35 +78,34 @@
 
 @synthesize contours=_contours;
 
-+ (id) bezierGraphWithBezierPath:(NSBezierPath *)path
++ (instancetype) bezierGraphWithPath:(CGPathRef)path
 {
-    return [[FBBezierGraph alloc] initWithBezierPath:path];
+    return [[FBBezierGraph alloc] initWithPath:path];
 }
 
-+ (id) bezierGraph
++ (instancetype) bezierGraph
 {
     return [[FBBezierGraph alloc] init];
 }
 
-- (id) initWithBezierPath:(NSBezierPath *)path
+- (instancetype) initWithPath:(CGPathRef)path
 {
     self = [super init];
     
     if ( self != nil ) {
         // A bezier graph is made up of contours, which are closed paths of curves. Anytime we
-        //  see a move to in the NSBezierPath, that's a new contour.
+        //  see a move to in the CGPath, that's a new contour.
 		
-        CGPoint lastPoint = CGPointZero;
-		BOOL	wasClosed = NO;
+        __block CGPoint lastPoint = CGPointZero;
+		__block BOOL	wasClosed = NO;
         _contours = [[NSMutableArray alloc] initWithCapacity:2];
             
-        FBBezierContour *contour = nil;
-        for (NSUInteger i = 0; i < path.elementCount; i++) {
-            NSBezierElement element = [path fb_elementAtIndex:i];
-            
-            switch (element.kind) {
-                case NSMoveToBezierPathElement:
+        __block FBBezierContour *contour = nil;
+		CGPathEnumerateElementsUsingBlock(path, ^(const CGPathElement *element) {
+            switch (element->type) {
+                case kCGPathElementMoveToPoint:
 				{
+					CGPoint point = *(CGPoint *) element->points;
                     // if previous contour wasn't closed, close it
 					
 					if( !wasClosed && contour != nil )
@@ -118,38 +117,60 @@
                     contour = [[FBBezierContour alloc] init];
                     [self addContour:contour];
                     
-                    lastPoint = element.point;
+                    lastPoint = point;
                     break;
 				}
 					
-                case NSLineToBezierPathElement: {
+                case kCGPathElementAddLineToPoint:
+				{
+					CGPoint point = *(CGPoint *) element->points;
                     // [MO] skip degenerate line segments
-                    if (!CGPointEqualToPoint(element.point, lastPoint)) {
-                        // Convert lines to bezier curves as well. Just set control point to be in the line formed
-                        //  by the end points
-                        [contour addCurve:[FBBezierCurve bezierCurveWithLineStartPoint:lastPoint endPoint:element.point]];
-                        
-                        lastPoint = element.point;
-                    }
+                    if (CGPointEqualToPoint(point, lastPoint))
+						return;
+					
+					// Convert lines to bezier curves as well. Just set control point to be in the line formed
+					//  by the end points
+					[contour addCurve:[FBBezierCurve bezierCurveWithLineStartPoint:lastPoint endPoint:point]];
+					
+					lastPoint = point;
                     break;
                 }
-                    
-                case NSCurveToBezierPathElement:
+			
+				case kCGPathElementAddQuadCurveToPoint:
 				{
+					NSPoint controlPoint = *(NSPoint *) &element->points[0];
+					NSPoint point = *(NSPoint *) &element->points[1];
+					// GPC: skip degenerate case where all points are equal
+					
+					if( CGPointEqualToPoint( point, lastPoint ) && CGPointEqualToPoint( point, controlPoint ))
+						return;
+					
+					[contour addCurve:[FBBezierCurve bezierCurveWithEndPoint1:lastPoint controlPoint1:controlPoint controlPoint2:controlPoint endPoint2:point]];
+					
+					lastPoint = point;
+					break;
+				}
+					
+                case kCGPathElementAddCurveToPoint:
+				{
+					NSPoint controlPoint1 = *(NSPoint *) &element->points[0];
+					NSPoint controlPoint2 = *(NSPoint *) &element->points[1];
+					NSPoint point = *(NSPoint *) &element->points[2];
                     // GPC: skip degenerate case where all points are equal
 					
-					if( CGPointEqualToPoint( element.point, lastPoint ) && CGPointEqualToPoint( element.point, element.controlPoints[0] ) && CGPointEqualToPoint( element.point, element.controlPoints[1] ))
-						continue;
+					if( CGPointEqualToPoint( point, lastPoint ) && CGPointEqualToPoint( point, controlPoint1 ) && CGPointEqualToPoint( point, controlPoint2 ))
+						return;
 
-					[contour addCurve:[FBBezierCurve bezierCurveWithEndPoint1:lastPoint controlPoint1:element.controlPoints[0] controlPoint2:element.controlPoints[1] endPoint2:element.point]];
+					[contour addCurve:[FBBezierCurve bezierCurveWithEndPoint1:lastPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2 endPoint2:point]];
                     
-                    lastPoint = element.point;
+                    lastPoint = point;
                     break;
-				}   
-                case NSClosePathBezierPathElement:
+				}
+					
+                case kCGPathElementCloseSubpath:
                     // [MO] attempt to close the bezier contour by
                     // mapping closepaths to equivalent lineto operations,
-                    // though as with our NSLineToBezierPathElement processing,
+                    // though as with our kCGPathElementAddLineToPoint processing,
                     // we check so as not to add degenerate line segments which 
                     // blow up the clipping code.
                     
@@ -166,7 +187,7 @@
                     lastPoint = CGPointZero;
                     break;
             }
-        }
+        });
 
 		if( !wasClosed && contour != nil )
 			[contour close];
@@ -176,7 +197,7 @@
     return self;
 }
 
-- (id) init
+- (instancetype) init
 {
     self = [super init];
     
@@ -535,15 +556,15 @@
     return [allParts differenceWithBezierGraph:intersectingParts];
 }
 
-- (NSBezierPath *) bezierPath
+- (CGPathRef) path
 {
     // Convert this graph into a bezier path. This is straightforward, each contour
     //  starting with a move to and each subsequent edge being translated by doing
     //  a curve to.
     // Be sure to mark the winding rule as even odd, or interior contours (holes)
     //  won't get filled/left alone properly.
-    NSBezierPath *path = [NSBezierPath bezierPath];
-    path.windingRule = NSEvenOddWindingRule;
+    CGMutablePathRef path = CGPathCreateMutable();
+//    path.windingRule = NSEvenOddWindingRule;
 
     for (FBBezierContour *contour in _contours) 
 	{
@@ -551,16 +572,16 @@
         for (FBBezierCurve *edge in contour.edges)
 		{
             if ( firstPoint ) {
-                [path moveToPoint:edge.endPoint1];
+				CGPathMoveToPoint(path, NULL, edge.endPoint1.x, edge.endPoint1.y);
                 firstPoint = NO;
             }
             
 			if( edge.isStraightLine)
-				[path lineToPoint:edge.endPoint2];
+				CGPathAddLineToPoint(path, NULL, edge.endPoint2.x, edge.endPoint2.y);
 			else
-				[path curveToPoint:edge.endPoint2 controlPoint1:edge.controlPoint1 controlPoint2:edge.controlPoint2];
+				CGPathAddCurveToPoint(path, NULL, edge.controlPoint1.x, edge.controlPoint1.y, edge.controlPoint2.x, edge.controlPoint2.y, edge.endPoint2.x, edge.endPoint2.y);
         }
-		[path closePath];	// GPC: close each contour
+		CGPathCloseSubpath(path);	// GPC: close each contour
     }
     
     return path;
@@ -800,14 +821,14 @@
     return closestLocation;
 }
 
-- (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)testContour
+- (CGPathRef) debugPathForContainmentOfContour:(FBBezierContour *)testContour
 {
-    return [self debugPathForContainmentOfContour:testContour transform:[NSAffineTransform transform]];
+    return [self debugPathForContainmentOfContour:testContour transform:CGAffineTransformIdentity];
 }
 
-- (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)testContour transform:(NSAffineTransform *)transform
+- (CGPathRef) debugPathForContainmentOfContour:(FBBezierContour *)testContour transform:(CGAffineTransform)transform
 {
-    NSBezierPath *path = [NSBezierPath bezierPath];
+    CGMutablePathRef path = CGPathCreateMutable();
     
     __block NSUInteger intersectCount = 0;
     for (FBBezierContour *contour in self.contours) {
@@ -849,7 +870,7 @@
         FBBezierCurve *testCurve = [FBBezierCurve bezierCurveWithLineStartPoint:testPoint endPoint:lineEndPoint];
 
         [contour intersectionsWithRay:testCurve withBlock:^(FBBezierIntersection *intersection) {
-            [path appendBezierPath:[NSBezierPath circleAtPoint:[transform transformPoint:intersection.location]]];
+			CGPathAddPath(path, NULL, CGPathCreateWithCircleAtPoint(CGPointApplyAffineTransform(intersection.location, transform)));
             intersectCount++;
         }];
     }
@@ -860,33 +881,33 @@
         
         CGPoint lineEndPoint = CGPointMake(testPoint.x > NSMinX(self.bounds) ? NSMinX(self.bounds) - 10 : NSMaxX(self.bounds) + 10, testPoint.y); /* just move us outside the bounds of the graph */
         FBBezierCurve *testCurve = [FBBezierCurve bezierCurveWithLineStartPoint:testPoint endPoint:lineEndPoint];
-        [path appendBezierPath:[transform transformBezierPath:[testCurve bezierPath]]];
+		CGPathAddPath(path, &transform, testCurve.path);
     }
 	
-	// if this countour is flagged as "inside", the debug path is shown dashed, otherwise solid
-	if ( (intersectCount & 1) == 1 ) {
-        CGFloat dashes[] = { 2, 3 };
-		[path setLineDash:dashes count:2 phase:0];
-    }
+//	// if this countour is flagged as "inside", the debug path is shown dashed, otherwise solid
+//	if ( (intersectCount & 1) == 1 ) {
+//        CGFloat dashes[] = { 2, 3 };
+//		[path setLineDash:dashes count:2 phase:0];
+//    }
 
     return path;
 }
 
 
-- (NSBezierPath *) debugPathForJointsOfContour:(FBBezierContour *)testContour
+- (CGPathRef) debugPathForJointsOfContour:(FBBezierContour *)testContour
 {
-    NSBezierPath *path = [NSBezierPath bezierPath];
+    CGMutablePathRef path = CGPathCreateMutable();
 
     for (FBBezierCurve *edge in testContour.edges) {
         if ( !edge.isStraightLine ) {
-            [path moveToPoint:edge.endPoint1];
-            [path lineToPoint:edge.controlPoint1];
-            [path appendBezierPath:[NSBezierPath smallCircleAtPoint:edge.controlPoint1]];
-            [path moveToPoint:edge.endPoint2];
-            [path lineToPoint:edge.controlPoint2];
-            [path appendBezierPath:[NSBezierPath smallCircleAtPoint:edge.controlPoint2]];            
+			CGPathMoveToPoint(path, NULL, edge.endPoint1.x, edge.endPoint1.y);
+			CGPathAddLineToPoint(path, NULL, edge.controlPoint1.x, edge.controlPoint1.y);
+			CGPathAddPath(path, NULL, CGPathCreateWithSmallCircleAtPoint(edge.controlPoint1));
+            CGPathMoveToPoint(path, NULL, edge.endPoint2.x, edge.endPoint2.y);
+            CGPathAddLineToPoint(path, NULL, edge.controlPoint2.x, edge.controlPoint2.y);
+            CGPathAddPath(path, NULL, CGPathCreateWithSmallCircleAtPoint(edge.controlPoint2));
         }
-        [path appendBezierPath:[NSBezierPath smallRectAtPoint:edge.endPoint2]];
+        CGPathAddPath(path, NULL, CGPathCreateWithSmallRectAtPoint(edge.endPoint2));
     }    
 
     return path;

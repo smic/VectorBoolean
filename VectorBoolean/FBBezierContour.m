@@ -14,7 +14,7 @@
 #import "FBDebug.h"
 #import "FBGeometry.h"
 #import "FBBezierIntersection.h"
-#import "NSBezierPath+Utilities.h"
+#import "CGPath+Utilities.h"
 #import "FBCurveLocation.h"
 #import "FBBezierIntersectRange.h"
 
@@ -72,7 +72,7 @@
     [_edges addObject:curve];
     _bounds = CGRectZero; // force the bounds to be recalculated
     _boundingRect = CGRectZero;
-	_bezPathCache = nil;
+	_pathCache = nil;
 }
 
 - (void) addCurveFrom:(FBEdgeCrossing *)startCrossing to:(FBEdgeCrossing *)endCrossing
@@ -365,30 +365,29 @@
     return (containerCount & 1) != 0;
 }
 
-- (NSBezierPath*) bezierPath		// GPC: added
+- (CGPathRef) path		// GPC: added
 {
-	if ( _bezPathCache == nil ) {
-		NSBezierPath* path = [NSBezierPath bezierPath];
+	if ( _pathCache == nil ) {
+		CGMutablePathRef path = CGPathCreateMutable();
 		BOOL firstPoint = YES;        
 		
 		for ( FBBezierCurve *edge in self.edges ) {
 			if ( firstPoint ) {
-				[path moveToPoint:edge.endPoint1];
+				CGPathMoveToPoint(path, NULL, edge.endPoint1.x, edge.endPoint1.y);
 				firstPoint = NO;
 			}
 			
 			if ( edge.isStraightLine )
-				[path lineToPoint:edge.endPoint2];
+				CGPathAddLineToPoint(path, NULL, edge.endPoint2.x, edge.endPoint2.y);
 			else
-				[path curveToPoint:edge.endPoint2 controlPoint1:edge.controlPoint1 controlPoint2:edge.controlPoint2];
+				CGPathAddCurveToPoint(path, NULL, edge.controlPoint1.x, edge.controlPoint1.y, edge.controlPoint2.x, edge.controlPoint2.y, edge.endPoint2.x, edge.endPoint2.y);
 		}
 		
-		[path closePath];
-		path.windingRule = NSEvenOddWindingRule;
-		_bezPathCache = path;
+		CGPathCloseSubpath(path);
+		_pathCache = path;
     }
 	
-    return _bezPathCache;
+    return _pathCache;
 }
 
 
@@ -606,13 +605,13 @@
 
 
 
-- (NSBezierPath *) debugPathForIntersectionType:(NSInteger)itersectionType
+- (CGPathRef) debugPathForIntersectionType:(NSInteger)itersectionType
 {
 	// returns a path consisting of small circles placed at the intersections that match <ti>
 	// this allows the internal state of a contour to be rapidly visualized so that bugs with
 	// boolean ops are easier to spot at a glance
 	
-	NSBezierPath *path = [NSBezierPath bezierPath];
+	CGMutablePathRef path = CGPathCreateMutable();
 	
 	for ( FBBezierCurve* edge in _edges ) {
         [edge crossingsWithBlock:^(FBEdgeCrossing *crossing, BOOL *stop) {
@@ -632,24 +631,24 @@
 			}
 			
 			// if the crossing is flagged as "entry", show a circle, otherwise a rectangle
-			[path appendBezierPath:crossing.isEntry? [NSBezierPath circleAtPoint:crossing.location] : [NSBezierPath rectAtPoint:crossing.location]];
-            
+			CGPathAddPath(path, NULL, crossing.isEntry? CGPathCreateWithCircleAtPoint(crossing.location) : CGPathCreateWithRectAtPoint(crossing.location));
+			
         }];
 	}
 	
     // Add the start point and direction for marking
     FBBezierCurve *startEdge = [self startEdge];
     CGPoint startEdgeTangent = FBNormalizePoint(FBSubtractPoint(startEdge.controlPoint1, startEdge.endPoint1));
-    [path appendBezierPath:[NSBezierPath triangleAtPoint:startEdge.endPoint1 direction:startEdgeTangent]];
+	CGPathAddPath(path, NULL, CGPathCreateWithTriangleAtPoint(startEdge.endPoint1, startEdgeTangent));
     
 	// add the contour's entire path to make it easy to see which one owns which crossings (these can be colour-coded when drawing the paths)
-	[path appendBezierPath:[self bezierPath]];
+	CGPathAddPath(path, NULL, self.path);
 	
-	// if this countour is flagged as "inside", the debug path is shown dashed, otherwise solid
-	if ( self.inside == FBContourInsideHole ) {
-        CGFloat dashes[] = { 2, 3 };
-		[path setLineDash:dashes count:2 phase:0];
-    }
+//	// if this countour is flagged as "inside", the debug path is shown dashed, otherwise solid
+//	if ( self.inside == FBContourInsideHole ) {
+//        CGFloat dashes[] = { 2, 3 };
+//		[path setLineDash:dashes count:2 phase:0];
+//    }
 	
 	return path;
 }

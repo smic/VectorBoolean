@@ -20,8 +20,8 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
 @interface AppDelegate ()
 
 @property (nonatomic, weak) IBOutlet CanvasView *view;
-@property (nonatomic, strong) NSBezierPath *path1;
-@property (nonatomic, strong) NSBezierPath *path2;
+@property (nonatomic, strong) CGPathRef path1 __attribute__((NSObject));
+@property (nonatomic, strong) CGPathRef path2 __attribute__((NSObject));
 @property (nonatomic) NSUInteger exampleIndex;
 @property (nonatomic) BooleanType booleanType;
 
@@ -126,69 +126,69 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
 
 - (void)addSomeOverlap
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 300, 200)];
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(355, 240) withRadius:125];
+    self.path1 = [self pathWithRectangle:CGRectMake(50, 50, 300, 200)];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(355, 240) withRadius:125];
 }
 
 - (void)addCircleInRectangle
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 300, 300)];
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:150];
+    self.path1 = [self pathWithRectangle:CGRectMake(50, 50, 300, 300)];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(200, 200) withRadius:150];
 }
 
 - (void)addRectangleInCircle
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(150, 150, 150, 150)];
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:185];
+    self.path1 = [self pathWithRectangle:CGRectMake(150, 150, 150, 150)];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(200, 200) withRadius:185];
 }
 
 - (void)addCircleOnRectangle
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(15, 15, 370, 370)];
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:185];
+    self.path1 = [self pathWithRectangle:CGRectMake(15, 15, 370, 370)];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(200, 200) withRadius:185];
 }
 
 - (void)addHoleyRectangleWithRectangle
 {
-    NSBezierPath *path1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
-    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:path1];
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 50, 350, 300) toPath:path1];
+    [self addCircleAtPoint:CGPointMake(210, 200) withRadius:125 toPath:path1];
     self.path1 = path1;
     
-    NSBezierPath *path2 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(180, 5, 100, 400) toPath:path2];
+    CGMutablePathRef path2 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(180, 5, 100, 400) toPath:path2];
     self.path2 = path2;
 }
 
 - (void)addCircleOnTwoRectangles
 {
-    NSBezierPath *rectangles = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 5, 100, 400) toPath:rectangles];
-    [self addRectangle:NSMakeRect(350, 5, 100, 400) toPath:rectangles];
+    CGMutablePathRef rectangles = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 5, 100, 400) toPath:rectangles];
+    [self addRectangle:CGRectMake(350, 5, 100, 400) toPath:rectangles];
     self.path1 = rectangles;
     
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(200, 200) withRadius:185];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(200, 200) withRadius:185];
 }
 
 - (void)addCircleOverlappingCircle
 {
-    NSBezierPath *circle = [NSBezierPath bezierPath];
-    [self addCircleAtPoint:NSMakePoint(355, 240) withRadius:125 toPath:circle];
+    CGMutablePathRef circle = CGPathCreateMutable();
+    [self addCircleAtPoint:CGPointMake(355, 240) withRadius:125 toPath:circle];
     self.path1 = circle;
     
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 110) withRadius:100];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(210, 110) withRadius:100];
 }
 
 - (void)addComplexShapes
 {
-    NSBezierPath *part1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:part1];
-    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:part1];
+    CGMutablePathRef part1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 50, 350, 300) toPath:part1];
+    [self addCircleAtPoint:CGPointMake(210, 200) withRadius:125 toPath:part1];
     
-    NSBezierPath *part2 = [self pathWithRectangle:NSMakeRect(180, 5, 100, 400)];
+    CGPathRef part2 = [self pathWithRectangle:CGRectMake(180, 5, 100, 400)];
     
-    NSBezierPath *allParts = [part1 fb_union:part2];
-    NSBezierPath *intersectingParts = [part1 fb_intersect:part2];
+    CGPathRef allParts = CGPathUnion(part1, part2);
+    CGPathRef intersectingParts = CGPathIntersect(part1, part2);
     
     self.path1 = allParts;
     self.path2 = intersectingParts;
@@ -196,186 +196,186 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
 
 - (void)addComplexShapes2
 {
-    NSBezierPath *part1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 5, 100, 400) toPath:part1];
-    [self addRectangle:NSMakeRect(350, 5, 100, 400) toPath:part1];
+    CGMutablePathRef part1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 5, 100, 400) toPath:part1];
+    [self addRectangle:CGRectMake(350, 5, 100, 400) toPath:part1];
     
-    NSBezierPath *part2 = [NSBezierPath bezierPath];
-    [self addCircleAtPoint:NSMakePoint(200, 200) withRadius:185 toPath:part2];
+    CGMutablePathRef part2 = CGPathCreateMutable();
+    [self addCircleAtPoint:CGPointMake(200, 200) withRadius:185 toPath:part2];
     
-    NSBezierPath *allParts = [part1 fb_union:part2];
-    NSBezierPath *intersectingParts = [part1 fb_intersect:part2];
-    
+	CGPathRef allParts = CGPathUnion(part1, part2);
+	CGPathRef intersectingParts = CGPathIntersect(part1, part2);
+	
     self.path1 = allParts;
     self.path2 = intersectingParts;
 }
 
 - (void)addTriangleInsideRectangle
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(100, 100, 300, 300)];
-    self.path2 = [self pathWithTriangle:NSMakePoint(100, 400) point2:NSMakePoint(400, 400) point3:NSMakePoint(250, 250)];
+    self.path1 = [self pathWithRectangle:CGRectMake(100, 100, 300, 300)];
+    self.path2 = [self pathWithTriangle:CGPointMake(100, 400) point2:CGPointMake(400, 400) point3:CGPointMake(250, 250)];
 }
 
 - (void)addDiamondOverlappingRectangle
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(50, 50, 200, 200)];
-    self.path2 = [self pathWithQuadrangle:NSMakePoint(50, 250) point2:NSMakePoint(150, 400) point3:NSMakePoint(250, 250) point4:NSMakePoint(150, 100)];
+    self.path1 = [self pathWithRectangle:CGRectMake(50, 50, 200, 200)];
+    self.path2 = [self pathWithQuadrangle:CGPointMake(50, 250) point2:CGPointMake(150, 400) point3:CGPointMake(250, 250) point4:CGPointMake(150, 100)];
 }
 
 - (void)addDiamondInsideRectangle
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(100, 100, 300, 300)];
-    self.path2 = [self pathWithQuadrangle:NSMakePoint(100, 250) point2:NSMakePoint(250, 400) point3:NSMakePoint(400, 250) point4:NSMakePoint(250, 100)];
+    self.path1 = [self pathWithRectangle:CGRectMake(100, 100, 300, 300)];
+    self.path2 = [self pathWithQuadrangle:CGPointMake(100, 250) point2:CGPointMake(250, 400) point3:CGPointMake(400, 250) point4:CGPointMake(250, 100)];
 }
 
 - (void)addNonOverlappingContours
 {
-    self.path1 = [self pathWithRectangle:NSMakeRect(100, 200, 200, 200)];
+    self.path1 = [self pathWithRectangle:CGRectMake(100, 200, 200, 200)];
     
-    NSBezierPath *path2 = [NSBezierPath bezierPath];
-    [self addCircleAtPoint:NSMakePoint(200, 300) withRadius:85 toPath:path2];
-    [self addCircleAtPoint:NSMakePoint(200, 95) withRadius:85 toPath:path2];
+    CGMutablePathRef path2 = CGPathCreateMutable();
+    [self addCircleAtPoint:CGPointMake(200, 300) withRadius:85 toPath:path2];
+    [self addCircleAtPoint:CGPointMake(200, 95) withRadius:85 toPath:path2];
     self.path2 = path2;
 }
 
 - (void)addMoreNonOverlappingContours
 {
-    NSBezierPath *path1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(100, 200, 200, 200) toPath:path1];
-    [self addRectangle:NSMakeRect(175, 70, 50, 50) toPath:path1];
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(100, 200, 200, 200) toPath:path1];
+    [self addRectangle:CGRectMake(175, 70, 50, 50) toPath:path1];
     self.path1 = path1;
     
-    NSBezierPath *path2 = [NSBezierPath bezierPath];
-    [self addCircleAtPoint:NSMakePoint(200, 300) withRadius:85 toPath:path2];
-    [self addCircleAtPoint:NSMakePoint(200, 95) withRadius:85 toPath:path2];
+    CGMutablePathRef path2 = CGPathCreateMutable();
+    [self addCircleAtPoint:CGPointMake(200, 300) withRadius:85 toPath:path2];
+    [self addCircleAtPoint:CGPointMake(200, 95) withRadius:85 toPath:path2];
     self.path2 = path2;
 }
 
 - (void)addConcentricContours
 {
-    NSBezierPath *path1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
-    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:path1];
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 50, 350, 300) toPath:path1];
+    [self addCircleAtPoint:CGPointMake(210, 200) withRadius:125 toPath:path1];
     self.path1 = path1;
     
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 200) withRadius:140];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(210, 200) withRadius:140];
 }
 
 - (void)addMoreConcentricContours
 {
-    NSBezierPath *path1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
-    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:path1];
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 50, 350, 300) toPath:path1];
+    [self addCircleAtPoint:CGPointMake(210, 200) withRadius:125 toPath:path1];
     self.path1 = path1;
     
-    self.path2 = [self pathWithCircleAtPoint:NSMakePoint(210, 200) withRadius:70];
+    self.path2 = [self pathWithCircleAtPoint:CGPointMake(210, 200) withRadius:70];
 }
 
 - (void)addOverlappingHole
 {
-    NSBezierPath *path1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
-    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:path1];
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 50, 350, 300) toPath:path1];
+    [self addCircleAtPoint:CGPointMake(210, 200) withRadius:125 toPath:path1];
     self.path1 = path1;
     
-    NSBezierPath *path2 = [NSBezierPath bezierPath];
-    [self addCircleAtPoint:NSMakePoint(180, 180) withRadius:125 toPath:path2];
+    CGMutablePathRef path2 = CGPathCreateMutable();
+    [self addCircleAtPoint:CGPointMake(180, 180) withRadius:125 toPath:path2];
     self.path2 = path2;
 }
 
 - (void)addHoleOverlappingHole
 {
-    NSBezierPath *path1 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(50, 50, 350, 300) toPath:path1];
-    [self addCircleAtPoint:NSMakePoint(210, 200) withRadius:125 toPath:path1];
+    CGMutablePathRef path1 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(50, 50, 350, 300) toPath:path1];
+    [self addCircleAtPoint:CGPointMake(210, 200) withRadius:125 toPath:path1];
     self.path1 = path1;
     
-    NSBezierPath *path2 = [NSBezierPath bezierPath];
-    [self addRectangle:NSMakeRect(225, 65, 160, 160) toPath:path2];
-    [self addCircleAtPoint:NSMakePoint(305, 145) withRadius:65 toPath:path2];
+    CGMutablePathRef path2 = CGPathCreateMutable();
+    [self addRectangle:CGRectMake(225, 65, 160, 160) toPath:path2];
+    [self addCircleAtPoint:CGPointMake(305, 145) withRadius:65 toPath:path2];
     self.path2 = path2;
 }
 
 - (void)addCurvyShapeOverlappingRectangle
 {
-    NSBezierPath *path1 = [NSBezierPath bezierPath];
+    CGMutablePathRef path1 = CGPathCreateMutable();
     CGFloat top = 65.0 + 160.0 / 3.0;
-    [path1 moveToPoint:NSMakePoint(40, top)];
-    [path1 lineToPoint:NSMakePoint(410, top)];
-    [path1 lineToPoint:NSMakePoint(410, 50)];
-    [path1 lineToPoint:NSMakePoint(40, 50)];
-    [path1 lineToPoint:NSMakePoint(40, top)];
+	CGPathMoveToPoint(path1, NULL, 40, top);
+	CGPathAddLineToPoint(path1, NULL, 410, top);
+	CGPathAddLineToPoint(path1, NULL, 410, 50);
+	CGPathAddLineToPoint(path1, NULL, 40, 50);
+	CGPathAddLineToPoint(path1, NULL, 40, top);
     self.path1 = path1;
     
-    NSBezierPath *path2 = [NSBezierPath bezierPath];
-    [path2 moveToPoint:NSMakePoint(335.000000, 203.000000)];
-    [path2 curveToPoint:NSMakePoint(335.000000, 200.000000) controlPoint1:NSMakePoint(335.000000, 202.000000) controlPoint2:NSMakePoint(335.000000, 201.000000)];
-    [path2 curveToPoint:NSMakePoint(270.000000, 90.000000) controlPoint1:NSMakePoint(335.000000, 153.000000) controlPoint2:NSMakePoint(309.000000, 111.000000)];
-    [path2 curveToPoint:NSMakePoint(240.000000, 145.000000) controlPoint1:NSMakePoint(252.000000, 102.000000) controlPoint2:NSMakePoint(240.000000, 122.000000)];
-    [path2 curveToPoint:NSMakePoint(305.000000, 210.000000) controlPoint1:NSMakePoint(240.000000, 181.000000) controlPoint2:NSMakePoint(269.000000, 210.000000)];
-    [path2 curveToPoint:NSMakePoint(335.000000, 203.000000) controlPoint1:NSMakePoint(316.000000, 210.000000) controlPoint2:NSMakePoint(326.000000, 207.000000)];
+    CGMutablePathRef path2 = CGPathCreateMutable();
+	CGPathMoveToPoint(path1, NULL, 335.000000, 203.000000);
+	CGPathAddCurveToPoint(path2, NULL, 335.000000, 202.000000, 335.000000, 153.000000, 335.000000, 200.000000);
+	CGPathAddCurveToPoint(path2, NULL, 335.000000, 153.000000, 309.000000, 111.000000, 270.000000, 90.000000);
+	CGPathAddCurveToPoint(path2, NULL, 252.000000, 102.000000, 240.000000, 122.000000, 240.000000, 145.000000);
+	CGPathAddCurveToPoint(path2, NULL, 240.000000, 181.000000, 269.000000, 210.000000, 305.000000, 210.000000);
+	CGPathAddCurveToPoint(path2, NULL, 316.000000, 210.000000, 326.000000, 207.000000, 335.000000, 203.000000);
     self.path2 = path2;
 }
 
-- (NSBezierPath *)pathWithRectangle:(NSRect)rect
+- (CGPathRef)pathWithRectangle:(CGRect)rect
 {
-    NSBezierPath *rectangle = [NSBezierPath bezierPath];
+    CGMutablePathRef rectangle = CGPathCreateMutable();
     [self addRectangle:rect toPath:rectangle];
     return rectangle;
 }
 
-- (NSBezierPath *)pathWithCircleAtPoint:(NSPoint)center withRadius:(CGFloat)radius
+- (CGPathRef)pathWithCircleAtPoint:(CGPoint)center withRadius:(CGFloat)radius
 {
-    NSBezierPath *circle = [NSBezierPath bezierPath];
+    CGMutablePathRef circle = CGPathCreateMutable();
     [self addCircleAtPoint:center withRadius:radius toPath:circle];
     return circle;
 }
 
-- (NSBezierPath *)pathWithTriangle:(NSPoint)point1 point2:(NSPoint)point2 point3:(NSPoint)point3
+- (CGPathRef)pathWithTriangle:(CGPoint)point1 point2:(CGPoint)point2 point3:(CGPoint)point3
 {
-    NSBezierPath *triangle = [NSBezierPath bezierPath];
+    CGMutablePathRef triangle = CGPathCreateMutable();
     [self addTriangle:point1 point2:point2 point3:point3 toPath:triangle];
     return triangle;
 }
 
-- (NSBezierPath *)pathWithQuadrangle:(NSPoint)point1 point2:(NSPoint)point2 point3:(NSPoint)point3 point4:(NSPoint)point4
+- (CGPathRef)pathWithQuadrangle:(CGPoint)point1 point2:(CGPoint)point2 point3:(CGPoint)point3 point4:(CGPoint)point4
 {
-    NSBezierPath *quandrangle = [NSBezierPath bezierPath];
+    CGMutablePathRef quandrangle = CGPathCreateMutable();
     [self addQuadrangle:point1 point2:point2 point3:point3 point4:point4 toPath:quandrangle];
     return quandrangle;
 }
 
-- (void)addRectangle:(NSRect)rect toPath:(NSBezierPath *)path
+- (void)addRectangle:(CGRect)rect toPath:(CGMutablePathRef)path
 {
-    [path appendBezierPathWithRect:rect];
+	CGPathAddRect(path, NULL, rect);
 }
 
-- (void)addCircleAtPoint:(NSPoint)center withRadius:(CGFloat)radius toPath:(NSBezierPath *)circle
+- (void)addCircleAtPoint:(CGPoint)center withRadius:(CGFloat)radius toPath:(CGMutablePathRef)circle
 {
     static const CGFloat FBMagicNumber = 0.55228475;
     CGFloat controlPointLength = radius * FBMagicNumber;
-    [circle moveToPoint:NSMakePoint(center.x - radius, center.y)];
-    [circle curveToPoint:NSMakePoint(center.x, center.y + radius) controlPoint1:NSMakePoint(center.x - radius, center.y + controlPointLength) controlPoint2:NSMakePoint(center.x - controlPointLength, center.y + radius)];
-    [circle curveToPoint:NSMakePoint(center.x + radius, center.y) controlPoint1:NSMakePoint(center.x + controlPointLength, center.y + radius) controlPoint2:NSMakePoint(center.x + radius, center.y + controlPointLength)];
-    [circle curveToPoint:NSMakePoint(center.x, center.y - radius) controlPoint1:NSMakePoint(center.x + radius, center.y - controlPointLength) controlPoint2:NSMakePoint(center.x + controlPointLength, center.y - radius)];
-    [circle curveToPoint:NSMakePoint(center.x - radius, center.y) controlPoint1:NSMakePoint(center.x - controlPointLength, center.y - radius) controlPoint2:NSMakePoint(center.x - radius, center.y - controlPointLength)];
+	CGPathMoveToPoint(circle, NULL, center.x - radius, center.y);
+	CGPathAddCurveToPoint(circle, NULL, center.x - radius, center.y + controlPointLength, center.x - controlPointLength, center.y + radius, center.x, center.y + radius);
+	CGPathAddCurveToPoint(circle, NULL, center.x + controlPointLength, center.y + radius,center.x + radius, center.y + controlPointLength, center.x + radius, center.y);
+	CGPathAddCurveToPoint(circle, NULL, center.x + radius, center.y - controlPointLength, center.x + controlPointLength, center.y - radius, center.x, center.y - radius);
+	CGPathAddCurveToPoint(circle, NULL, center.x - controlPointLength, center.y - radius, center.x - radius, center.y - controlPointLength, center.x - radius, center.y);
 }
 
-- (void)addTriangle:(NSPoint)point1 point2:(NSPoint)point2 point3:(NSPoint)point3 toPath:(NSBezierPath *)path
+- (void)addTriangle:(CGPoint)point1 point2:(CGPoint)point2 point3:(CGPoint)point3 toPath:(CGMutablePathRef)path
 {
-    [path moveToPoint:point1];
-    [path lineToPoint:point2];
-    [path lineToPoint:point3];
-    [path lineToPoint:point1];
+	CGPathMoveToPoint(path, NULL, point1.x, point1.y);
+	CGPathAddLineToPoint(path, NULL, point2.x, point2.y);
+	CGPathAddLineToPoint(path, NULL, point3.x, point3.y);
+	CGPathAddLineToPoint(path, NULL, point1.x, point1.y);
 }
 
-- (void)addQuadrangle:(NSPoint)point1 point2:(NSPoint)point2 point3:(NSPoint)point3 point4:(NSPoint)point4 toPath:(NSBezierPath *)path
+- (void)addQuadrangle:(CGPoint)point1 point2:(CGPoint)point2 point3:(CGPoint)point3 point4:(CGPoint)point4 toPath:(CGMutablePathRef)path
 {
-    [path moveToPoint:point1];
-    [path lineToPoint:point2];
-    [path lineToPoint:point3];
-    [path lineToPoint:point4];
-    [path lineToPoint:point1];
+	CGPathMoveToPoint(path, NULL, point1.x, point1.y);
+	CGPathAddLineToPoint(path, NULL, point2.x, point2.y);
+	CGPathAddLineToPoint(path, NULL, point3.x, point3.y);
+	CGPathAddLineToPoint(path, NULL, point4.x, point4.y);
+	CGPathAddLineToPoint(path, NULL, point1.x, point1.y);
 }
 
 - (void)upateView {
@@ -388,22 +388,22 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
             
         case BooleanTypeUnion: {
 			NSLog(@"Union");
-            NSBezierPath *result = [self.path1 fb_union:self.path2];
+            CGPathRef result = CGPathUnion(self.path1, self.path2);
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeDifference: {
 			NSLog(@"Difference");
-            NSBezierPath *result = [self.path1 fb_difference:self.path2];
+            CGPathRef result = CGPathDifference(self.path1, self.path2);
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeIntersect: {
 			NSLog(@"Intersect");
-            NSBezierPath *result = [self.path1 fb_intersect:self.path2];
+            CGPathRef result = CGPathIntersect(self.path1, self.path2);
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
         case BooleanTypeXOR: {
 			NSLog(@"XOR");
-            NSBezierPath *result = [self.path1 fb_xor:self.path2];
+            CGPathRef result = CGPathXOR(self.path1, self.path2);
             [self.view addPath:result withColor:[NSColor purpleColor]];
         } break;
             

@@ -6,7 +6,8 @@
 //  Copyright 2011 Fortunate Bear, LLC. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import "FBGeometry.h"
 
 @class FBBezierIntersectRange, FBBezierIntersection, FBBezierContour;
@@ -41,7 +42,7 @@ typedef struct FBBezierCurveData {
     BOOL _startShared;
 }
 
-+ (NSArray *) bezierCurvesFromBezierPath:(NSBezierPath *)path;
++ (NSArray *) bezierCurvesFromPath:(CGPathRef)path;
 
 + (instancetype) bezierCurveWithLineStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint;
 + (instancetype) bezierCurveWithEndPoint1:(CGPoint)endPoint1 controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2 endPoint2:(CGPoint)endPoint2;
@@ -78,7 +79,7 @@ typedef struct FBBezierCurveData {
 
 @property (nonatomic, readonly, strong) FBBezierCurve *reversedCurve;	// GPC: added
 
-@property (nonatomic, readonly, copy) NSBezierPath *bezierPath;
+@property (nonatomic, readonly) CGPathRef path;
 
 - (FBBezierCurve *) clone;
 

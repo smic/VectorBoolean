@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Fortunate Bear, LLC. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
-#import <VectorBoolean/NSBezierPath+Boolean.h>
-#import <VectorBoolean/NSBezierPath+Utilities.h>
+#import <VectorBoolean/CGPath+Boolean.h>
+#import <VectorBoolean/CGPath+Utilities.h>

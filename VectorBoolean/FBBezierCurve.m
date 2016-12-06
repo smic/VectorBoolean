@@ -7,7 +7,7 @@
 //
 
 #import "FBBezierCurve.h"
-#import "NSBezierPath+Utilities.h"
+#import "CGPath+Utilities.h"
 #import "FBGeometry.h"
 #import "FBBezierCurveLength.h"
 #import "FBNormalizedLine.h"
@@ -929,43 +929,67 @@ static void FBBezierCurveDataIntersectionsWithBezierCurve(FBBezierCurveData me, 
     return _data.isStraightLine;
 }
 
-+ (NSArray *) bezierCurvesFromBezierPath:(NSBezierPath *)path
++ (NSArray *) bezierCurvesFromPath:(CGPathRef)path
 {
     // Helper method to easily convert a bezier path into an array of FBBezierCurves. Very straight forward,
     //  only lines are a special case.
     
-    CGPoint lastPoint = CGPointZero;
-    NSMutableArray *bezierCurves = [NSMutableArray arrayWithCapacity:path.elementCount];
-    
-    for (NSUInteger i = 0; i < path.elementCount; i++) {
-        NSBezierElement element = [path fb_elementAtIndex:i];
-        
-        switch (element.kind) {
-            case NSMoveToBezierPathElement:
-                lastPoint = element.point;
-                break;
-                
-            case NSLineToBezierPathElement: {
-                // Convert lines to bezier curves as well. Just set control point to be in the line formed
-                //  by the end points
-                [bezierCurves addObject:[FBBezierCurve bezierCurveWithLineStartPoint:lastPoint endPoint:element.point]];
-                
-                lastPoint = element.point;
-                break;
-            }
-                
-            case NSCurveToBezierPathElement:
-                [bezierCurves addObject:[FBBezierCurve bezierCurveWithEndPoint1:lastPoint controlPoint1:element.controlPoints[0] controlPoint2:element.controlPoints[1] endPoint2:element.point]];
-                
-                lastPoint = element.point;
-                break;
-                
-            case NSClosePathBezierPathElement:
-                lastPoint = CGPointZero;
-                break;
-        }
-    }
-    
+    __block CGPoint lastPoint = CGPointZero;
+    __block NSMutableArray *bezierCurves = [NSMutableArray array];
+	
+	CGPathEnumerateElementsUsingBlock(path, ^(const CGPathElement *element) {
+		switch (element->type) {
+			case kCGPathElementMoveToPoint:
+			{
+				CGPoint point = *(CGPoint *) element->points;
+				
+				lastPoint = point;
+				break;
+			}
+				
+			case kCGPathElementAddLineToPoint:
+			{
+				CGPoint point = *(CGPoint *) element->points;
+				
+				// Convert lines to bezier curves as well. Just set control point to be in the line formed
+				//  by the end points
+				[bezierCurves addObject:[FBBezierCurve bezierCurveWithLineStartPoint:lastPoint endPoint:point]];
+				
+				lastPoint = point;
+				break;
+			}
+				
+			case kCGPathElementAddQuadCurveToPoint:
+			{
+				NSPoint controlPoint = *(NSPoint *) &element->points[0];
+				NSPoint point = *(NSPoint *) &element->points[1];
+				
+				[bezierCurves addObject:[FBBezierCurve bezierCurveWithEndPoint1:lastPoint controlPoint1:controlPoint controlPoint2:controlPoint endPoint2:point]];
+				
+				lastPoint = point;
+				break;
+			}
+				
+			case kCGPathElementAddCurveToPoint:
+			{
+				NSPoint controlPoint1 = *(NSPoint *) &element->points[0];
+				NSPoint controlPoint2 = *(NSPoint *) &element->points[1];
+				NSPoint point = *(NSPoint *) &element->points[2];
+				
+				[bezierCurves addObject:[FBBezierCurve bezierCurveWithEndPoint1:lastPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2 endPoint2:point]];
+				
+				lastPoint = point;
+				break;
+			}
+				
+			case kCGPathElementCloseSubpath:
+			{
+				lastPoint = CGPointZero;
+				break;
+			}
+		}
+	});
+	
     return bezierCurves;
 }
 
@@ -1215,11 +1239,11 @@ static void FBBezierCurveDataIntersectionsWithBezierCurve(FBBezierCurveData me, 
     return returnValue;
 }
 
-- (NSBezierPath *) bezierPath
+- (CGPathRef) path
 {
-    NSBezierPath *path = [NSBezierPath bezierPath];
-    [path moveToPoint:self.endPoint1];
-    [path curveToPoint:self.endPoint2 controlPoint1:self.controlPoint1 controlPoint2:self.controlPoint2];
+	CGMutablePathRef path = CGPathCreateMutable();
+	CGPathMoveToPoint(path, NULL, self.endPoint1.x, self.endPoint1.y);
+	CGPathAddCurveToPoint(path, NULL, self.controlPoint1.x, self.controlPoint1.y, self.controlPoint2.x, self.controlPoint2.y, self.endPoint2.x, self.endPoint2.y);
     return path;
 }
 

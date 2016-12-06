@@ -6,12 +6,13 @@
 //  Copyright 2011 Fortunate Bear, LLC. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 @class FBBezierContour;
 @class FBCurveLocation;
 
-// FBBezierGraph is more or less an exploded version of an NSBezierPath, and
+// FBBezierGraph is more or less an exploded version of an CGPath, and
 //  the two can be converted between easily. FBBezierGraph allows boolean
 //  operations to be performed by allowing the curves to be annotated with
 //  extra information such as where intersections happen.
@@ -20,16 +21,16 @@
     CGRect _bounds;
 }
 
-+ (id) bezierGraph;
-+ (id) bezierGraphWithBezierPath:(NSBezierPath *)path;
-- (id) initWithBezierPath:(NSBezierPath *)path;
++ (instancetype) bezierGraph;
++ (instancetype) bezierGraphWithPath:(CGPathRef)path;
+- (instancetype) initWithPath:(CGPathRef)path;
 
 - (FBBezierGraph *) unionWithBezierGraph:(FBBezierGraph *)graph;
 - (FBBezierGraph *) intersectWithBezierGraph:(FBBezierGraph *)graph;
 - (FBBezierGraph *) differenceWithBezierGraph:(FBBezierGraph *)graph;
 - (FBBezierGraph *) xorWithBezierGraph:(FBBezierGraph *)graph;
 
-- (NSBezierPath *) bezierPath;
+- (CGPathRef) path;
 
 @property (readonly) NSArray* contours;
 @property (readonly) CGRect bounds;
@@ -40,8 +41,8 @@
 - (void) debuggingInsertCrossingsForIntersectWithBezierGraph:(FBBezierGraph *)otherGraph;
 - (void) debuggingInsertCrossingsForDifferenceWithBezierGraph:(FBBezierGraph *)otherGraph;
 - (void) debuggingInsertIntersectionsWithBezierGraph:(FBBezierGraph *)otherGraph;
-- (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)contour;
-- (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)testContour transform:(NSAffineTransform *)transform;
-- (NSBezierPath *) debugPathForJointsOfContour:(FBBezierContour *)testContour;
+- (CGPathRef) debugPathForContainmentOfContour:(FBBezierContour *)contour;
+- (CGPathRef) debugPathForContainmentOfContour:(FBBezierContour *)testContour transform:(CGAffineTransform)transform;
+- (CGPathRef) debugPathForJointsOfContour:(FBBezierContour *)testContour;
 
 @end

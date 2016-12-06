@@ -36,7 +36,7 @@ FBContourDirection;
     CGRect          _boundingRect;
     FBContourInside _inside;
     NSMutableArray  *_overlaps;
-	NSBezierPath*	_bezPathCache;	// GPC: added
+	CGPathRef		_pathCache;	// GPC: added
 }
 
 + (id) bezierContourWithCurve:(FBBezierCurve *)curve;
@@ -54,7 +54,7 @@ FBContourDirection;
 - (BOOL) containsPoint:(CGPoint)point;
 - (void) markCrossingsAsEntryOrExitWithContour:(FBBezierContour *)otherContour markInside:(BOOL)markInside;
 
-- (NSBezierPath*)		bezierPath;		// GPC: added
+- (CGPathRef)			path;		// GPC: added
 - (void)				close;			// GPC: added
 
 - (FBBezierContour*)	reversedContour;	// GPC: added
@@ -79,7 +79,7 @@ FBContourDirection;
 
 - (BOOL) crossesOwnContour:(FBBezierContour *)contour;
 
-- (NSBezierPath*) debugPathForIntersectionType:(NSInteger) ti;
+- (CGPathRef) debugPathForIntersectionType:(NSInteger) ti;
 
 - (void) forEachEdgeOverlapDo:(void (^)(FBEdgeOverlap *overlap))block;
 - (BOOL) doesOverlapContainCrossing:(FBEdgeCrossing *)crossing;

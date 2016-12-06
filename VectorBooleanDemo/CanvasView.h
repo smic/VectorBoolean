@@ -12,11 +12,11 @@
 
 @interface CanvasView : NSView  
 
-- (void) addPath:(NSBezierPath *)path withColor:(NSColor *)color;
+- (void) addPath:(CGPathRef)path withColor:(NSColor *)color;
 - (void) clear;
 
 @property (nonatomic, readonly) NSUInteger numberOfPaths;
-- (NSBezierPath *) pathAtIndex:(NSUInteger)index;
+- (CGPathRef) pathAtIndex:(NSUInteger)index;
 
 - (void) drawRect:(NSRect)dirtyRect;
 
