@@ -68,7 +68,7 @@ static CGRect BoxFrame(CGPoint point)
 		
 		CGContextSetFillColorWithColor(context, [color highlightWithLevel:0.3].CGColor);
 		CGContextAddPath(context, path);
-		CGContextFillPath(context);
+		CGContextEOFillPath(context);
     }
 	
 	// Stroke the objects
