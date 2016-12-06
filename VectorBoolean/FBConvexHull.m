@@ -15,13 +15,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Convex Hull functions
 
-static inline BOOL FBConvexHullDoPointsTurnWrongDirection(NSPoint point1, NSPoint point2, NSPoint point3)
+static inline BOOL FBConvexHullDoPointsTurnWrongDirection(CGPoint point1, CGPoint point2, CGPoint point3)
 {
     CGFloat area = CounterClockwiseTurn(point1, point2, point3);
     return FBAreValuesClose(area, 0.0) || area < 0.0;
 }
 
-void FBConvexHullBuildFromPoints(NSPoint points[4], NSPoint *results, NSUInteger *outLength)
+void FBConvexHullBuildFromPoints(CGPoint points[4], CGPoint *results, NSUInteger *outLength)
 {
     // Compute the convex hull for this bezier curve. The convex hull is made up of the end and control points.
     //  The hard part is determine the order they go in, and if any are inside or colinear with the convex hull.
@@ -40,7 +40,7 @@ void FBConvexHullBuildFromPoints(NSPoint points[4], NSPoint *results, NSUInteger
         NSUInteger newSortLength = 0;
         for (NSUInteger i = 1; i < sortLength; i++) {
             if ( points[i - 1].x > points[i].x || (FBAreValuesClose(points[i - 1].x, points[i].x) && points[i - 1].y > points[i].y) ) {
-                NSPoint tempPoint = points[i];
+                CGPoint tempPoint = points[i];
                 points[i] = points[i - 1];
                 points[i - 1] = tempPoint;
                 newSortLength = i;

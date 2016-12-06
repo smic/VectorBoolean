@@ -16,7 +16,7 @@
 // Helper functions
 //
 
-CGFloat FBParameterOfPointOnLine(NSPoint lineStart, NSPoint lineEnd, NSPoint point)
+CGFloat FBParameterOfPointOnLine(CGPoint lineStart, CGPoint lineEnd, CGPoint point)
 {
     // Note: its asumed you have already checked that point is colinear with the line (lineStart, lineEnd)
     CGFloat lineLength = FBDistanceBetweenPoints(lineStart, lineEnd);
@@ -31,7 +31,7 @@ CGFloat FBParameterOfPointOnLine(NSPoint lineStart, NSPoint lineEnd, NSPoint poi
     return parameter;
 }
 
-BOOL FBLinesIntersect(NSPoint line1Start, NSPoint line1End, NSPoint line2Start, NSPoint line2End, NSPoint *outIntersect)
+BOOL FBLinesIntersect(CGPoint line1Start, CGPoint line1End, CGPoint line2Start, CGPoint line2End, CGPoint *outIntersect)
 {
     FBNormalizedLine line1 = FBNormalizedLineMake(line1Start, line1End);
     FBNormalizedLine line2 = FBNormalizedLineMake(line2Start, line2End);
@@ -44,7 +44,7 @@ BOOL FBLinesIntersect(NSPoint line1Start, NSPoint line1End, NSPoint line2Start, 
 
 // The three points are a counter-clockwise turn if the return value is greater than 0,
 //  clockwise if less than 0, or colinear if 0.
-CGFloat CounterClockwiseTurn(NSPoint point1, NSPoint point2, NSPoint point3)
+CGFloat CounterClockwiseTurn(CGPoint point1, CGPoint point2, CGPoint point3)
 {
     // We're calculating the signed area of the triangle formed by the three points. Well,
     //  almost the area of the triangle -- we'd need to divide by 2. But since we only
@@ -54,7 +54,7 @@ CGFloat CounterClockwiseTurn(NSPoint point1, NSPoint point2, NSPoint point3)
 }
 
 // Calculate if and where the given line intersects the horizontal line at y.
-BOOL LineIntersectsHorizontalLine(NSPoint startPoint, NSPoint endPoint, CGFloat y, NSPoint *intersectPoint)
+BOOL LineIntersectsHorizontalLine(CGPoint startPoint, CGPoint endPoint, CGFloat y, CGPoint *intersectPoint)
 {
     // Do a quick test to see if y even falls on the startPoint,endPoint line
     CGFloat minY = MIN(startPoint.y, endPoint.y);
@@ -64,16 +64,16 @@ BOOL LineIntersectsHorizontalLine(NSPoint startPoint, NSPoint endPoint, CGFloat 
     
     // There's an intersection here somewhere
     if ( startPoint.x == endPoint.x )
-        *intersectPoint = NSMakePoint(startPoint.x, y);
+        *intersectPoint = CGPointMake(startPoint.x, y);
     else {
         CGFloat slope = (endPoint.y - startPoint.y) / (endPoint.x - startPoint.x);
-        *intersectPoint = NSMakePoint((y - startPoint.y) / slope + startPoint.x, y);
+        *intersectPoint = CGPointMake((y - startPoint.y) / slope + startPoint.x, y);
     }
     
     return YES;
 }
 
-NSPoint BezierWithPoints(NSUInteger degree, NSPoint *bezierPoints, CGFloat parameter, NSPoint *leftCurve, NSPoint *rightCurve)
+CGPoint BezierWithPoints(NSUInteger degree, CGPoint *bezierPoints, CGFloat parameter, CGPoint *leftCurve, CGPoint *rightCurve)
 {
     // Calculate a point on the bezier curve passed in, specifically the point at parameter.
     //  We're using De Casteljau's algorithm, which not only calculates the point at parameter
@@ -87,7 +87,7 @@ NSPoint BezierWithPoints(NSUInteger degree, NSPoint *bezierPoints, CGFloat param
     // degree is the order of the bezier path, which will be cubic (3) most of the time.
     
     // With this algorithm we start out with the points in the bezier path.
-    NSPoint points[6] = {}; // we assume we'll never get more than a cubic bezier
+    CGPoint points[6] = {}; // we assume we'll never get more than a cubic bezier
     for (NSUInteger i = 0; i <= degree; i++)
         points[i] = bezierPoints[i];
     
@@ -141,7 +141,7 @@ NSInteger FBSign(CGFloat value)
     return value < 0.0 ? -1.0 : 1.0;
 }
 
-NSUInteger FBCountBezierCrossings(NSPoint *bezierPoints, NSUInteger degree)
+NSUInteger FBCountBezierCrossings(CGPoint *bezierPoints, NSUInteger degree)
 {
     NSUInteger count = 0;
     NSInteger sign = FBSign(bezierPoints[0].y);
@@ -157,7 +157,7 @@ NSUInteger FBCountBezierCrossings(NSPoint *bezierPoints, NSUInteger degree)
 
 static const NSUInteger FBFindBezierRootsMaximumDepth = 64;
 
-BOOL FBIsControlPolygonFlatEnough(NSPoint *bezierPoints, NSUInteger degree, NSPoint *intersectionPoint)
+BOOL FBIsControlPolygonFlatEnough(CGPoint *bezierPoints, NSUInteger degree, CGPoint *intersectionPoint)
 {
     CGFloat FBFindBezierRootsErrorThreshold = ldexpf(1, -(int)(FBFindBezierRootsMaximumDepth - 1));
     
@@ -176,10 +176,10 @@ BOOL FBIsControlPolygonFlatEnough(NSPoint *bezierPoints, NSUInteger degree, NSPo
     
     FBNormalizedLine zeroLine = FBNormalizedLineMakeWithCoefficients(0, 1, 0);
     FBNormalizedLine aboveLine = FBNormalizedLineOffset(line, -aboveDistance);
-    NSPoint intersect1 = FBNormalizedLineIntersection(zeroLine, aboveLine);
+    CGPoint intersect1 = FBNormalizedLineIntersection(zeroLine, aboveLine);
     
     FBNormalizedLine belowLine = FBNormalizedLineOffset(line, -belowDistance);
-    NSPoint intersect2 = FBNormalizedLineIntersection(zeroLine, belowLine);
+    CGPoint intersect2 = FBNormalizedLineIntersection(zeroLine, belowLine);
     
     CGFloat error = MAX(intersect1.x, intersect2.x) - MIN(intersect1.x, intersect2.x);
     if ( error < FBFindBezierRootsErrorThreshold ) {
@@ -190,7 +190,7 @@ BOOL FBIsControlPolygonFlatEnough(NSPoint *bezierPoints, NSUInteger degree, NSPo
     return NO;
 }
 
-void FBFindBezierRootsWithDepth(NSPoint *bezierPoints, NSUInteger degree, NSUInteger depth, void (^block)(CGFloat root))
+void FBFindBezierRootsWithDepth(CGPoint *bezierPoints, NSUInteger degree, NSUInteger depth, void (^block)(CGFloat root))
 {
     NSUInteger crossingCount = FBCountBezierCrossings(bezierPoints, degree);
     if ( crossingCount == 0 )
@@ -201,7 +201,7 @@ void FBFindBezierRootsWithDepth(NSPoint *bezierPoints, NSUInteger degree, NSUInt
             block(root);
             return;
         }
-        NSPoint intersectionPoint = NSZeroPoint;
+        CGPoint intersectionPoint = CGPointZero;
         if ( FBIsControlPolygonFlatEnough(bezierPoints, degree, &intersectionPoint) ) {
             block(intersectionPoint.x);
             return;
@@ -209,14 +209,14 @@ void FBFindBezierRootsWithDepth(NSPoint *bezierPoints, NSUInteger degree, NSUInt
     }
     
     // Subdivide and try again
-    NSPoint leftCurve[6] = {}; // assume 5th degree
-    NSPoint rightCurve[6] = {};
+    CGPoint leftCurve[6] = {}; // assume 5th degree
+    CGPoint rightCurve[6] = {};
     BezierWithPoints(degree, bezierPoints, 0.5, leftCurve, rightCurve);
     FBFindBezierRootsWithDepth(leftCurve, degree, depth + 1, block);
     FBFindBezierRootsWithDepth(rightCurve, degree, depth + 1, block);
 }
 
-void FBFindBezierRoots(NSPoint *bezierPoints, NSUInteger degree, void (^block)(CGFloat root))
+void FBFindBezierRoots(CGPoint *bezierPoints, NSUInteger degree, void (^block)(CGFloat root))
 {
     FBFindBezierRootsWithDepth(bezierPoints, degree, 0, block);
 }

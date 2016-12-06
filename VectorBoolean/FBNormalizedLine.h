@@ -14,8 +14,8 @@ typedef struct FBNormalizedLine {
     CGFloat c; // constant
 } FBNormalizedLine;
 
-FBNormalizedLine FBNormalizedLineMake(NSPoint point1, NSPoint point2);
+FBNormalizedLine FBNormalizedLineMake(CGPoint point1, CGPoint point2);
 FBNormalizedLine FBNormalizedLineMakeWithCoefficients(CGFloat a, CGFloat b, CGFloat c);
 FBNormalizedLine FBNormalizedLineOffset(FBNormalizedLine line, CGFloat offset);
-CGFloat FBNormalizedLineDistanceFromPoint(FBNormalizedLine line, NSPoint point);
-NSPoint FBNormalizedLineIntersection(FBNormalizedLine line1, FBNormalizedLine line2);
+CGFloat FBNormalizedLineDistanceFromPoint(FBNormalizedLine line, CGPoint point);
+CGPoint FBNormalizedLineIntersection(FBNormalizedLine line1, FBNormalizedLine line2);

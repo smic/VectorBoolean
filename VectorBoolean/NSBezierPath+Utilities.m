@@ -14,7 +14,7 @@ static const CGFloat FBDebugSmallPointSize = 3.0;
 
 @implementation NSBezierPath (FBUtilities)
 
-- (NSPoint) fb_pointAtIndex:(NSUInteger)index
+- (CGPoint) fb_pointAtIndex:(NSUInteger)index
 {
     return [self fb_elementAtIndex:index].point;
 }
@@ -22,7 +22,7 @@ static const CGFloat FBDebugSmallPointSize = 3.0;
 - (NSBezierElement) fb_elementAtIndex:(NSUInteger)index
 {
     NSBezierElement element = {};
-    NSPoint points[3] = {};
+    CGPoint points[3] = {};
     element.kind = [self elementAtIndex:index associatedPoints:points];
     switch (element.kind) {
         case NSMoveToBezierPathElement:
@@ -71,7 +71,7 @@ static const CGFloat FBDebugSmallPointSize = 3.0;
         
         // If the first element is a move to where we left off, skip it
         if ( element.kind == NSMoveToBezierPathElement ) {
-            if ( NSEqualPoints(element.point, previousElement.point) )
+            if ( CGPointEqualToPoint(element.point, previousElement.point) )
                 continue;
             else
                 element.kind = NSLineToBezierPathElement; // change it to a line to
@@ -100,41 +100,41 @@ static const CGFloat FBDebugSmallPointSize = 3.0;
     }
 }
 
-+ (NSBezierPath *) circleAtPoint:(NSPoint)point
++ (NSBezierPath *) circleAtPoint:(CGPoint)point
 {
-	NSRect rect = NSMakeRect(point.x - FBDebugPointSize * 0.5, point.y - FBDebugPointSize * 0.5, FBDebugPointSize, FBDebugPointSize);
+	CGRect rect = CGRectMake(point.x - FBDebugPointSize * 0.5, point.y - FBDebugPointSize * 0.5, FBDebugPointSize, FBDebugPointSize);
 		
 	return [self bezierPathWithOvalInRect:rect];
 }
 
-+ (NSBezierPath *) rectAtPoint:(NSPoint)point
++ (NSBezierPath *) rectAtPoint:(CGPoint)point
 {
-	NSRect rect = NSMakeRect(point.x - FBDebugPointSize * 0.5 * 1.3, point.y - FBDebugPointSize * 0.5 * 1.3, FBDebugPointSize * 1.3, FBDebugPointSize * 1.3);
+	CGRect rect = CGRectMake(point.x - FBDebugPointSize * 0.5 * 1.3, point.y - FBDebugPointSize * 0.5 * 1.3, FBDebugPointSize * 1.3, FBDebugPointSize * 1.3);
 		
 	return [self bezierPathWithRect:rect];
 }
 
-+ (NSBezierPath *) smallCircleAtPoint:(NSPoint)point
++ (NSBezierPath *) smallCircleAtPoint:(CGPoint)point
 {
-	NSRect rect = NSMakeRect(point.x - FBDebugSmallPointSize * 0.5, point.y - FBDebugSmallPointSize * 0.5, FBDebugSmallPointSize, FBDebugSmallPointSize);
+	CGRect rect = CGRectMake(point.x - FBDebugSmallPointSize * 0.5, point.y - FBDebugSmallPointSize * 0.5, FBDebugSmallPointSize, FBDebugSmallPointSize);
     
 	return [self bezierPathWithOvalInRect:rect];
 }
 
-+ (NSBezierPath *) smallRectAtPoint:(NSPoint)point
++ (NSBezierPath *) smallRectAtPoint:(CGPoint)point
 {
-	NSRect rect = NSMakeRect(point.x - FBDebugSmallPointSize * 0.5, point.y - FBDebugSmallPointSize * 0.5, FBDebugSmallPointSize, FBDebugSmallPointSize);
+	CGRect rect = CGRectMake(point.x - FBDebugSmallPointSize * 0.5, point.y - FBDebugSmallPointSize * 0.5, FBDebugSmallPointSize, FBDebugSmallPointSize);
     
 	return [self bezierPathWithRect:rect];
 }
 
-+ (NSBezierPath *) triangleAtPoint:(NSPoint)point direction:(NSPoint)tangent
++ (NSBezierPath *) triangleAtPoint:(CGPoint)point direction:(CGPoint)tangent
 {
-    NSPoint endPoint = FBAddPoint(point, FBScalePoint(tangent, FBDebugPointSize * 1.5));
-    NSPoint normal1 = FBLineNormal(point, endPoint);
-    NSPoint normal2 = NSMakePoint(-normal1.x, -normal1.y);
-    NSPoint basePoint1 = FBAddPoint(point, FBScalePoint(normal1, FBDebugPointSize * 0.5));
-    NSPoint basePoint2 = FBAddPoint(point, FBScalePoint(normal2, FBDebugPointSize * 0.5));
+    CGPoint endPoint = FBAddPoint(point, FBScalePoint(tangent, FBDebugPointSize * 1.5));
+    CGPoint normal1 = FBLineNormal(point, endPoint);
+    CGPoint normal2 = CGPointMake(-normal1.x, -normal1.y);
+    CGPoint basePoint1 = FBAddPoint(point, FBScalePoint(normal1, FBDebugPointSize * 0.5));
+    CGPoint basePoint2 = FBAddPoint(point, FBScalePoint(normal2, FBDebugPointSize * 0.5));
     NSBezierPath *path = [NSBezierPath bezierPath];
     [path moveToPoint:basePoint1];
     [path lineToPoint:endPoint];

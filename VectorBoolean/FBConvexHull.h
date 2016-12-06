@@ -8,4 +8,4 @@
 
 #import <Foundation/Foundation.h>
 
-extern void FBConvexHullBuildFromPoints(NSPoint points[4], NSPoint *results, NSUInteger *outLength);
+extern void FBConvexHullBuildFromPoints(CGPoint points[4], CGPoint *results, NSUInteger *outLength);

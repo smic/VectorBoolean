@@ -43,7 +43,7 @@ static void FBFindEdge2TangentCurves(FBBezierCurve *edge, FBBezierIntersection *
     }
 }
 
-static void FBComputeEdgeTangents(FBBezierCurve* leftCurve, FBBezierCurve *rightCurve, CGFloat offset, NSPoint edgeTangents[2])
+static void FBComputeEdgeTangents(FBBezierCurve* leftCurve, FBBezierCurve *rightCurve, CGFloat offset, CGPoint edgeTangents[2])
 {
     edgeTangents[0] = [leftCurve tangentFromRightOffset:offset];
     edgeTangents[1] = [rightCurve tangentFromLeftOffset:offset];
@@ -303,8 +303,8 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
     
     // Calculate the four tangents: The two tangents moving away from the intersection point on self, the two tangents
     //  moving away from the intersection point on edge2.
-    NSPoint edge1Tangents[] = { NSZeroPoint, NSZeroPoint };
-    NSPoint edge2Tangents[] = { NSZeroPoint, NSZeroPoint };
+    CGPoint edge1Tangents[] = { CGPointZero, CGPointZero };
+    CGPoint edge2Tangents[] = { CGPointZero, CGPointZero };
     CGFloat offset = 0.0;
     
     FBBezierCurve *edge1LeftCurve = nil;
@@ -333,8 +333,8 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
 {
     // Calculate the four tangents: The two tangents moving away from the intersection point on self, the two tangents
     //  moving away from the intersection point on edge2.
-    NSPoint edge1Tangents[] = { NSZeroPoint, NSZeroPoint };
-    NSPoint edge2Tangents[] = { NSZeroPoint, NSZeroPoint };
+    CGPoint edge1Tangents[] = { CGPointZero, CGPointZero };
+    CGPoint edge2Tangents[] = { CGPointZero, CGPointZero };
     CGFloat offset = 0.0;
     
     FBBezierCurve *edge1LeftCurve = nil;

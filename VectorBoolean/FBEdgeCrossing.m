@@ -82,7 +82,7 @@
     return _intersection.parameter2;
 }
 
-- (NSPoint) location
+- (CGPoint) location
 {
     return _intersection.location;
 }

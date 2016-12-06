@@ -15,7 +15,7 @@
 //  the 2D point where they intersect, the left and right parts of the curves relative to
 //  the intersection point, if the intersection is tangent. 
 @interface FBBezierIntersection : NSObject {
-    NSPoint _location;
+    CGPoint _location;
     FBBezierCurve *_curve1;
     CGFloat _parameter1;
     FBBezierCurve *_curve1LeftBezier;
@@ -32,7 +32,7 @@
 + (instancetype) intersectionWithCurve1:(FBBezierCurve *)curve1 parameter1:(CGFloat)parameter1 curve2:(FBBezierCurve *)curve2 parameter2:(CGFloat)parameter2;
 - (instancetype) initWithCurve1:(FBBezierCurve *)curve1 parameter1:(CGFloat)parameter1 curve2:(FBBezierCurve *)curve2 parameter2:(CGFloat)parameter2;
 
-@property (readonly) NSPoint location;
+@property (readonly) CGPoint location;
 @property (readonly, strong) FBBezierCurve *curve1;
 @property (readonly) CGFloat parameter1;
 @property (readonly, strong) FBBezierCurve *curve2;

@@ -16,7 +16,7 @@
 //  See:    http://softsurfer.com/Archive/algorithm_0102/algorithm_0102.htm#Distance%20to%20an%20Infinite%20Line
 //          http://www.cs.mtu.edu/~shene/COURSES/cs3621/NOTES/geometry/basic.html
 //
-FBNormalizedLine FBNormalizedLineMake(NSPoint point1, NSPoint point2)
+FBNormalizedLine FBNormalizedLineMake(CGPoint point1, CGPoint point2)
 {
     FBNormalizedLine line = { point1.y - point2.y, point2.x - point1.x, point1.x * point2.y - point2.x * point1.y };
     CGFloat distance = sqrt(line.b * line.b + line.a * line.a);
@@ -45,13 +45,13 @@ FBNormalizedLine FBNormalizedLineOffset(FBNormalizedLine line, CGFloat offset)
     return line;
 }
 
-CGFloat FBNormalizedLineDistanceFromPoint(FBNormalizedLine line, NSPoint point)
+CGFloat FBNormalizedLineDistanceFromPoint(FBNormalizedLine line, CGPoint point)
 {
     return line.a * point.x + line.b * point.y + line.c;
 }
 
-NSPoint FBNormalizedLineIntersection(FBNormalizedLine line1, FBNormalizedLine line2)
+CGPoint FBNormalizedLineIntersection(FBNormalizedLine line1, FBNormalizedLine line2)
 {
     CGFloat denominator = line1.a * line2.b - line2.a * line1.b;
-    return NSMakePoint((line1.b * line2.c - line2.b * line1.c) / denominator, (line1.a * line2.c - line2.a * line1.c) / denominator);
+    return CGPointMake((line1.b * line2.c - line2.b * line1.c) / denominator, (line1.a * line2.c - line2.a * line1.c) / denominator);
 }

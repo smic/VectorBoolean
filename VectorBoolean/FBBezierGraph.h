@@ -17,7 +17,7 @@
 //  extra information such as where intersections happen.
 @interface FBBezierGraph : NSObject {
     NSMutableArray *_contours;
-    NSRect _bounds;
+    CGRect _bounds;
 }
 
 + (id) bezierGraph;
@@ -32,9 +32,9 @@
 - (NSBezierPath *) bezierPath;
 
 @property (readonly) NSArray* contours;
-@property (readonly) NSRect bounds;
+@property (readonly) CGRect bounds;
 
-- (FBCurveLocation *) closestLocationToPoint:(NSPoint)point;
+- (FBCurveLocation *) closestLocationToPoint:(CGPoint)point;
 
 - (void) debuggingInsertCrossingsForUnionWithBezierGraph:(FBBezierGraph *)otherGraph;
 - (void) debuggingInsertCrossingsForIntersectWithBezierGraph:(FBBezierGraph *)otherGraph;

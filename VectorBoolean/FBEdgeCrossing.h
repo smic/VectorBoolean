@@ -53,6 +53,6 @@
 @property (weak, readonly) FBBezierCurve *rightCurve;
 @property (readonly, getter = isAtStart) BOOL atStart;
 @property (readonly, getter = isAtEnd) BOOL atEnd;
-@property (readonly) NSPoint location;
+@property (readonly) CGPoint location;
 
 @end

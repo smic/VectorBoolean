@@ -20,12 +20,12 @@
 
 @interface FBBezierContour ()
 
-- (BOOL) contourAndSelfIntersectingContoursContainPoint:(NSPoint)point;
+- (BOOL) contourAndSelfIntersectingContoursContainPoint:(CGPoint)point;
 - (void) addSelfIntersectingContoursToArray:(NSMutableArray *)contours originalContour:(FBBezierContour *)originalContour;
 
 @property (weak, readonly) NSArray *selfIntersectingContours;
 
-- (void) startingEdge:(FBBezierCurve **)outEdge parameter:(CGFloat *)outParameter point:(NSPoint *)outPoint;
+- (void) startingEdge:(FBBezierCurve **)outEdge parameter:(CGFloat *)outParameter point:(CGPoint *)outPoint;
 - (BOOL) markCrossingsOnEdge:(FBBezierCurve *)edge startParameter:(CGFloat)startParameter stopParameter:(CGFloat)stopParameter otherContours:(NSArray *)otherContours isEntry:(BOOL)startIsEntry;
 
 @property (weak, readonly) NSMutableArray *overlaps_;
@@ -70,8 +70,8 @@
     curve.contour = self;
     curve.index = _edges.count;
     [_edges addObject:curve];
-    _bounds = NSZeroRect; // force the bounds to be recalculated
-    _boundingRect = NSZeroRect;
+    _bounds = CGRectZero; // force the bounds to be recalculated
+    _boundingRect = CGRectZero;
 	_bezPathCache = nil;
 }
 
@@ -121,20 +121,20 @@
     [self addReverseCurve:curve];
 }
 
-- (NSRect) bounds
+- (CGRect) bounds
 {
     // Cache the bounds to save time
-    if ( !NSEqualRects(_bounds, NSZeroRect) )
+    if ( !CGRectEqualToRect(_bounds, CGRectZero) )
         return _bounds;
     
     // If no edges, no bounds
     if ( _edges.count == 0 )
-        return NSZeroRect;
+        return CGRectZero;
     
-    NSRect totalBounds = NSZeroRect;    
+    CGRect totalBounds = CGRectZero;    
     for (FBBezierCurve *edge in _edges) {
-        NSRect bounds = edge.bounds;
-        if ( NSEqualRects(totalBounds, NSZeroRect) )
+        CGRect bounds = edge.bounds;
+        if ( CGRectEqualToRect(totalBounds, CGRectZero) )
             totalBounds = bounds;
         else
             totalBounds = FBUnionRect(totalBounds, bounds);
@@ -145,20 +145,20 @@
     return _bounds;
 }
 
-- (NSRect) boundingRect
+- (CGRect) boundingRect
 {
     // Cache the bounds to save time
-    if ( !NSEqualRects(_boundingRect, NSZeroRect) )
+    if ( !CGRectEqualToRect(_boundingRect, CGRectZero) )
         return _boundingRect;
     
     // If no edges, no bounds
     if ( _edges.count == 0 )
-        return NSZeroRect;
+        return CGRectZero;
     
-    NSRect totalBounds = NSZeroRect;
+    CGRect totalBounds = CGRectZero;
     for (FBBezierCurve *edge in _edges) {
-        NSRect bounds = edge.boundingRect;
-        if ( NSEqualRects(totalBounds, NSZeroRect) )
+        CGRect bounds = edge.boundingRect;
+        if ( CGRectEqualToRect(totalBounds, CGRectZero) )
             totalBounds = bounds;
         else
             totalBounds = FBUnionRect(totalBounds, bounds);
@@ -169,24 +169,24 @@
     return _boundingRect;
 }
 
-- (NSPoint) firstPoint
+- (CGPoint) firstPoint
 {
     if ( _edges.count == 0 )
-        return NSZeroPoint;
+        return CGPointZero;
 
     FBBezierCurve *edge = _edges.firstObject;
     return edge.endPoint1;
 }
 
-- (BOOL) containsPoint:(NSPoint)testPoint
+- (BOOL) containsPoint:(CGPoint)testPoint
 {
-    if ( !NSPointInRect(testPoint, self.boundingRect) || !NSPointInRect(testPoint, self.bounds) )
+    if ( !CGRectContainsPoint(self.boundingRect, testPoint) || !CGRectContainsPoint(self.bounds, testPoint) )
         return NO;
     
 	// Create a test line from our point to somewhere outside our graph. We'll see how many times the test
     //  line intersects edges of the graph. Based on the even/odd rule, if it's an odd number, we're inside
     //  the graph, if even, outside.
-    NSPoint lineEndPoint = NSMakePoint(testPoint.x > NSMinX(self.bounds) ? NSMinX(self.bounds) - 10 : NSMaxX(self.bounds) + 10, testPoint.y); /* just move us outside the bounds of the graph */
+    CGPoint lineEndPoint = CGPointMake(testPoint.x > NSMinX(self.bounds) ? NSMinX(self.bounds) - 10 : NSMaxX(self.bounds) + 10, testPoint.y); /* just move us outside the bounds of the graph */
     FBBezierCurve *testCurve = [FBBezierCurve bezierCurveWithLineStartPoint:testPoint endPoint:lineEndPoint];
     
     NSUInteger intersectCount = [self numberOfIntersectionsWithRay:testCurve];
@@ -258,7 +258,7 @@
     return startEdge;
 }
 
-- (NSPoint) testPointForContainment
+- (CGPoint) testPointForContainment
 {
     // Start with the startEdge, and if it's not shared (overlapping) then use its first point
     FBBezierCurve *testEdge = self.startEdge;
@@ -278,7 +278,7 @@
     return [testEdge pointAtParameter:parameter leftBezierCurve:nil rightBezierCurve:nil];
 }
 
-- (void) startingEdge:(FBBezierCurve **)outEdge parameter:(CGFloat *)outParameter point:(NSPoint *)outPoint
+- (void) startingEdge:(FBBezierCurve **)outEdge parameter:(CGFloat *)outParameter point:(CGPoint *)outPoint
 {
     // Start with the startEdge, and if it's not shared (overlapping) then use its first point
     FBBezierCurve *testEdge = self.startEdge;
@@ -313,7 +313,7 @@
     //  the other graph, otherwise we could mark the crossings exactly opposite of what
     //  they're supposed to be.
     FBBezierCurve *startEdge = nil;
-    NSPoint startPoint = NSZeroPoint;
+    CGPoint startPoint = CGPointZero;
     CGFloat startParameter = 0.0;
     [self startingEdge:&startEdge parameter:&startParameter point:&startPoint];
     
@@ -352,7 +352,7 @@
     return isEntry;
 }
 
-- (BOOL) contourAndSelfIntersectingContoursContainPoint:(NSPoint)point
+- (BOOL) contourAndSelfIntersectingContoursContainPoint:(CGPoint)point
 {
     NSUInteger containerCount = 0;
     if ( [self containsPoint:point] )
@@ -419,7 +419,7 @@
 
 - (FBContourDirection) direction
 {
-	NSPoint lastPoint = NSZeroPoint, currentPoint = NSZeroPoint;
+	CGPoint lastPoint = CGPointZero, currentPoint = CGPointZero;
 	BOOL firstPoint = YES;
 	CGFloat	a = 0.0;
 	
@@ -573,7 +573,7 @@
     return copy;
 }
 
-- (FBCurveLocation *) closestLocationToPoint:(NSPoint)point
+- (FBCurveLocation *) closestLocationToPoint:(CGPoint)point
 {
     FBBezierCurve *closestEdge = nil;
     FBBezierCurveLocation location = {};
@@ -639,7 +639,7 @@
 	
     // Add the start point and direction for marking
     FBBezierCurve *startEdge = [self startEdge];
-    NSPoint startEdgeTangent = FBNormalizePoint(FBSubtractPoint(startEdge.controlPoint1, startEdge.endPoint1));
+    CGPoint startEdgeTangent = FBNormalizePoint(FBSubtractPoint(startEdge.controlPoint1, startEdge.endPoint1));
     [path appendBezierPath:[NSBezierPath triangleAtPoint:startEdge.endPoint1 direction:startEdgeTangent]];
     
 	// add the contour's entire path to make it easy to see which one owns which crossings (these can be colour-coded when drawing the paths)

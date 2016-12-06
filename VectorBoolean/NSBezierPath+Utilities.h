@@ -10,13 +10,13 @@
 
 typedef struct NSBezierElement {
     NSBezierPathElement kind;
-    NSPoint point;
-    NSPoint controlPoints[2];
+    CGPoint point;
+    CGPoint controlPoints[2];
 } NSBezierElement;
 
 @interface NSBezierPath (FBUtilities)
 
-- (NSPoint) fb_pointAtIndex:(NSUInteger)index;
+- (CGPoint) fb_pointAtIndex:(NSUInteger)index;
 - (NSBezierElement) fb_elementAtIndex:(NSUInteger)index;
 
 - (NSBezierPath *) fb_subpathWithRange:(NSRange)range;
@@ -25,10 +25,10 @@ typedef struct NSBezierElement {
 - (void) fb_appendPath:(NSBezierPath *)path;
 - (void) fb_appendElement:(NSBezierElement)element;
 
-+ (NSBezierPath *) circleAtPoint:(NSPoint)point;
-+ (NSBezierPath *) rectAtPoint:(NSPoint)point;
-+ (NSBezierPath *) triangleAtPoint:(NSPoint)point direction:(NSPoint)tangent;
-+ (NSBezierPath *) smallCircleAtPoint:(NSPoint)point;
-+ (NSBezierPath *) smallRectAtPoint:(NSPoint)point;
++ (NSBezierPath *) circleAtPoint:(CGPoint)point;
++ (NSBezierPath *) rectAtPoint:(CGPoint)point;
++ (NSBezierPath *) triangleAtPoint:(CGPoint)point direction:(CGPoint)tangent;
++ (NSBezierPath *) smallCircleAtPoint:(CGPoint)point;
++ (NSBezierPath *) smallRectAtPoint:(CGPoint)point;
 
 @end

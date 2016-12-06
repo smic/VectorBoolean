@@ -70,7 +70,7 @@ static CGFloat FBGaussQuadratureBaseForCubic(CGFloat t, CGFloat p1, CGFloat p2, 
     //return t * (t * (-3 * p1 + 9 * p2 - 9 * p3 + 3 * p4) + 6 * p1 + 12 * p2 + 3 * p3) - 3 * p1 + 3 * p2;
 }
 
-static CGFloat FBGaussQuadratureFOfTForCubic(CGFloat t, NSPoint p1, NSPoint p2, NSPoint p3, NSPoint p4)
+static CGFloat FBGaussQuadratureFOfTForCubic(CGFloat t, CGPoint p1, CGPoint p2, CGPoint p3, CGPoint p4)
 {
     CGFloat baseX = FBGaussQuadratureBaseForCubic(t, p1.x, p2.x, p3.x, p4.x);
     CGFloat baseY = FBGaussQuadratureBaseForCubic(t, p1.y, p2.y, p3.y, p4.y);
@@ -78,7 +78,7 @@ static CGFloat FBGaussQuadratureFOfTForCubic(CGFloat t, NSPoint p1, NSPoint p2, 
     return sqrt(baseX * baseX + baseY * baseY);
 }
 
-CGFloat FBGaussQuadratureComputeCurveLengthForCubic(CGFloat z, NSUInteger steps, NSPoint p1, NSPoint p2, NSPoint p3, NSPoint p4)
+CGFloat FBGaussQuadratureComputeCurveLengthForCubic(CGFloat z, NSUInteger steps, CGPoint p1, CGPoint p2, CGPoint p3, CGPoint p4)
 {
     CGFloat z2 = z / 2.0;
     CGFloat sum = 0.0;

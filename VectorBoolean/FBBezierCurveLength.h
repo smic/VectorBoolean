@@ -8,4 +8,4 @@
 
 #import <Foundation/Foundation.h>
 
-extern CGFloat FBGaussQuadratureComputeCurveLengthForCubic(CGFloat z, NSUInteger steps, NSPoint p1, NSPoint p2, NSPoint p3, NSPoint p4);
+extern CGFloat FBGaussQuadratureComputeCurveLengthForCubic(CGFloat z, NSUInteger steps, CGPoint p1, CGPoint p2, CGPoint p3, CGPoint p4);

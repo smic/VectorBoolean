@@ -9,32 +9,32 @@
 #import <Cocoa/Cocoa.h>
 
 
-CGFloat FBDistanceBetweenPoints(NSPoint point1, NSPoint point2);
-CGFloat FBDistancePointToLine(NSPoint point, NSPoint lineStartPoint, NSPoint lineEndPoint);
-NSPoint FBLineNormal(NSPoint lineStart, NSPoint lineEnd);
-NSPoint FBLineMidpoint(NSPoint lineStart, NSPoint lineEnd);
+CGFloat FBDistanceBetweenPoints(CGPoint point1, CGPoint point2);
+CGFloat FBDistancePointToLine(CGPoint point, CGPoint lineStartPoint, CGPoint lineEndPoint);
+CGPoint FBLineNormal(CGPoint lineStart, CGPoint lineEnd);
+CGPoint FBLineMidpoint(CGPoint lineStart, CGPoint lineEnd);
 
-NSPoint FBAddPoint(NSPoint point1, NSPoint point2);
-NSPoint FBScalePoint(NSPoint point, CGFloat scale);
-NSPoint FBUnitScalePoint(NSPoint point, CGFloat scale);
-NSPoint FBSubtractPoint(NSPoint point1, NSPoint point2);
-CGFloat FBDotMultiplyPoint(NSPoint point1, NSPoint point2);
-CGFloat FBPointLength(NSPoint point);
-CGFloat FBPointSquaredLength(NSPoint point);
-NSPoint FBNormalizePoint(NSPoint point);
-NSPoint FBNegatePoint(NSPoint point);
-NSPoint FBRoundPoint(NSPoint point);
+CGPoint FBAddPoint(CGPoint point1, CGPoint point2);
+CGPoint FBScalePoint(CGPoint point, CGFloat scale);
+CGPoint FBUnitScalePoint(CGPoint point, CGFloat scale);
+CGPoint FBSubtractPoint(CGPoint point1, CGPoint point2);
+CGFloat FBDotMultiplyPoint(CGPoint point1, CGPoint point2);
+CGFloat FBPointLength(CGPoint point);
+CGFloat FBPointSquaredLength(CGPoint point);
+CGPoint FBNormalizePoint(CGPoint point);
+CGPoint FBNegatePoint(CGPoint point);
+CGPoint FBRoundPoint(CGPoint point);
 
-NSPoint FBRectGetTopLeft(NSRect rect);
-NSPoint FBRectGetTopRight(NSRect rect);
-NSPoint FBRectGetBottomLeft(NSRect rect);
-NSPoint FBRectGetBottomRight(NSRect rect);
+CGPoint FBRectGetTopLeft(CGRect rect);
+CGPoint FBRectGetTopRight(CGRect rect);
+CGPoint FBRectGetBottomLeft(CGRect rect);
+CGPoint FBRectGetBottomRight(CGRect rect);
 
-void FBExpandBoundsByPoint(NSPoint *topLeft, NSPoint *bottomRight, NSPoint point);
-NSRect FBUnionRect(NSRect rect1, NSRect rect2);
+void FBExpandBoundsByPoint(CGPoint *topLeft, CGPoint *bottomRight, CGPoint point);
+CGRect FBUnionRect(CGRect rect1, CGRect rect2);
 
-BOOL FBArePointsClose(NSPoint point1, NSPoint point2);
-BOOL FBArePointsCloseWithOptions(NSPoint point1, NSPoint point2, CGFloat threshold);
+BOOL FBArePointsClose(CGPoint point1, CGPoint point2);
+BOOL FBArePointsCloseWithOptions(CGPoint point1, CGPoint point2, CGFloat threshold);
 BOOL FBAreValuesClose(CGFloat value1, CGFloat value2);
 BOOL FBAreValuesCloseWithOptions(CGFloat value1, CGFloat value2, CGFloat threshold);
 BOOL FBIsValueGreaterThan(CGFloat value, CGFloat minimum);
@@ -42,7 +42,7 @@ BOOL FBIsValueLessThan(CGFloat value, CGFloat maximum);
 BOOL FBIsValueGreaterThanEqual(CGFloat value, CGFloat minimum);
 BOOL FBIsValueLessThanEqual(CGFloat value, CGFloat maximum);
 
-extern BOOL FBLineBoundsMightOverlap(NSRect bounds1, NSRect bounds2);
+extern BOOL FBLineBoundsMightOverlap(CGRect bounds1, CGRect bounds2);
 
 //////////////////////////////////////////////////////////////////////////
 // Angle Range structure provides a simple way to store angle ranges
@@ -57,7 +57,7 @@ FBAngleRange FBAngleRangeMake(CGFloat minimum, CGFloat maximum);
 BOOL FBAngleRangeContainsAngle(FBAngleRange range, CGFloat angle);
 
 CGFloat NormalizeAngle(CGFloat value);
-CGFloat PolarAngle(NSPoint point);
+CGFloat PolarAngle(CGPoint point);
 
 //////////////////////////////////////////////////////////////////////////////////
 // Parameter ranges
@@ -76,5 +76,5 @@ extern CGFloat FBRangeAverage(FBRange range);
 extern CGFloat FBRangeScaleNormalizedValue(FBRange range, CGFloat value);
 extern FBRange FBRangeUnion(FBRange range1, FBRange range2);
 
-extern BOOL FBTangentsCross(NSPoint edge1Tangents[2], NSPoint edge2Tangents[2]);
-extern BOOL FBAreTangentsAmbigious(NSPoint edge1Tangents[2], NSPoint edge2Tangents[2]);
+extern BOOL FBTangentsCross(CGPoint edge1Tangents[2], CGPoint edge2Tangents[2]);
+extern BOOL FBAreTangentsAmbigious(CGPoint edge1Tangents[2], CGPoint edge2Tangents[2]);

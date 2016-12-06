@@ -32,8 +32,8 @@ FBContourDirection;
 //  can be filled or represent a hole in another contour.
 @interface FBBezierContour : NSObject<NSCopying> {
     NSMutableArray*	_edges;
-    NSRect			_bounds;
-    NSRect          _boundingRect;
+    CGRect			_bounds;
+    CGRect          _boundingRect;
     FBContourInside _inside;
     NSMutableArray  *_overlaps;
 	NSBezierPath*	_bezPathCache;	// GPC: added
@@ -51,7 +51,7 @@ FBContourDirection;
 
 - (void) intersectionsWithRay:(FBBezierCurve *)testEdge withBlock:(void (^)(FBBezierIntersection *intersection))block;
 - (NSUInteger) numberOfIntersectionsWithRay:(FBBezierCurve *)testEdge;
-- (BOOL) containsPoint:(NSPoint)point;
+- (BOOL) containsPoint:(CGPoint)point;
 - (void) markCrossingsAsEntryOrExitWithContour:(FBBezierContour *)otherContour markInside:(BOOL)markInside;
 
 - (NSBezierPath*)		bezierPath;		// GPC: added
@@ -66,14 +66,14 @@ FBContourDirection;
 - (BOOL) isEquivalent:(FBBezierContour *)other;
 
 - (FBBezierCurve *) startEdge;
-- (NSPoint) testPointForContainment;
+- (CGPoint) testPointForContainment;
 
-- (FBCurveLocation *) closestLocationToPoint:(NSPoint)point;
+- (FBCurveLocation *) closestLocationToPoint:(CGPoint)point;
 
 @property (readonly) NSArray *edges;
-@property (readonly) NSRect bounds;
-@property (readonly) NSRect boundingRect;
-@property (readonly) NSPoint firstPoint;
+@property (readonly) CGRect bounds;
+@property (readonly) CGRect boundingRect;
+@property (readonly) CGPoint firstPoint;
 @property FBContourInside inside;
 @property (weak, readonly) NSArray *intersectingContours;
 
