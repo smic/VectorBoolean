@@ -62,17 +62,23 @@ static NSRect BoxFrame(NSPoint point)
     [[NSColor whiteColor] set];
     [NSBezierPath fillRect:dirtyRect];
     
-    // Draw on the objects
+    // Fill the objects
     for (NSDictionary *object in self.paths) {
         NSColor *color = object[@"color"];
         NSBezierPath *path = object[@"path"];
         [[color highlightWithLevel:0.3] set];
         [path fill];
+    }
+	
+	// Stroke the objects
+	for (NSDictionary *object in self.paths) {
+		NSColor *color = object[@"color"];
+		NSBezierPath *path = object[@"path"];
 		
 		[color set];
 		[path stroke];
-    }
-    
+	}
+	
     // Draw on the end and control points
     if ( self.showPoints ) {
         for (NSDictionary *object in self.paths) {

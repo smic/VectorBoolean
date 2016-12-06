@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "SMPathsSubtractSmall.png",
+      "filename" : "SMPathsIntersectMini.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "SMPathsSubtractSmall@2x.png",
+      "filename" : "SMPathsIntersectMini@2x.png",
       "scale" : "2x"
     },
     {

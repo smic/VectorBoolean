@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "SMPathsNormalSmall.png",
+      "filename" : "SMPathsUnionMini.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "SMPathsNormalSmall@2x.png",
+      "filename" : "SMPathsUnionMini@2x.png",
       "scale" : "2x"
     },
     {

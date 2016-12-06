@@ -751,7 +751,7 @@
                         </connections>
                     </popUpButton>
                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="alN-aa-3RD">
-                        <rect key="frame" x="347" y="459" width="71" height="24"/>
+                        <rect key="frame" x="18" y="430" width="71" height="24"/>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="12k-3q-NJF">
                             <font key="font" metaFont="system"/>
                             <segments>
@@ -764,19 +764,19 @@
                         </connections>
                     </segmentedControl>
                     <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kZP-cl-mjG">
-                        <rect key="frame" x="18" y="430" width="186" height="24"/>
+                        <rect key="frame" x="347" y="459" width="170" height="24"/>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="yq7-1Q-87V">
                             <font key="font" metaFont="system"/>
                             <segments>
-                                <segment image="SMPathsNormalSmall" width="32" selected="YES"/>
-                                <segment image="SMPathsUnionSmall" width="32" tag="1"/>
-                                <segment image="SMPathsSubtractSmall" width="32" tag="2">
+                                <segment image="SMPathsNormalMini" width="32" selected="YES"/>
+                                <segment image="SMPathsUnionMini" width="32" tag="1"/>
+                                <segment image="SMPathsSubtractMini" width="32" tag="2">
                                     <nil key="label"/>
                                 </segment>
-                                <segment image="SMPathsIntersectSmall" tag="3">
+                                <segment image="SMPathsIntersectMini" tag="3">
                                     <nil key="label"/>
                                 </segment>
-                                <segment image="SMPathsExclusiveOrSmall" tag="5">
+                                <segment image="SMPathsExclusiveOrMini" tag="5">
                                     <nil key="label"/>
                                 </segment>
                             </segments>
@@ -787,7 +787,7 @@
                         </connections>
                     </segmentedControl>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="ZJH-mc-A6u">
-                        <rect key="frame" x="208" y="434" width="170" height="18"/>
+                        <rect key="frame" x="93" y="433" width="170" height="18"/>
                         <buttonCell key="cell" type="check" title="Show end/control points" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="71v-xh-yxo">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -797,7 +797,7 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="nAs-Ch-hZu">
-                        <rect key="frame" x="394" y="434" width="138" height="18"/>
+                        <rect key="frame" x="279" y="433" width="138" height="18"/>
                         <buttonCell key="cell" type="check" title="Show intersections" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4iU-TD-bXX">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -806,6 +806,9 @@
                             <action selector="onShowIntersections:" target="Voe-Tx-rLC" id="xLu-do-kdE"/>
                         </connections>
                     </button>
+                    <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="qOR-PW-uJ7">
+                        <rect key="frame" x="0.0" y="421" width="551" height="5"/>
+                    </box>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="vaN-Pi-U1r" customClass="CanvasView">
                         <rect key="frame" x="0.0" y="0.0" width="551" height="423"/>
                         <constraints>
@@ -813,29 +816,26 @@
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="400" id="ehv-aa-fC9"/>
                         </constraints>
                     </customView>
-                    <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="qOR-PW-uJ7">
-                        <rect key="frame" x="0.0" y="421" width="551" height="5"/>
-                    </box>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="alN-aa-3RD" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="07g-h0-RHD"/>
-                    <constraint firstAttribute="trailing" secondItem="vaN-Pi-U1r" secondAttribute="trailing" id="9G2-8n-RUf"/>
-                    <constraint firstItem="kZP-cl-mjG" firstAttribute="top" secondItem="rVX-D6-mh0" secondAttribute="bottom" constant="8" symbolic="YES" id="LGl-JK-fyy"/>
-                    <constraint firstAttribute="trailing" secondItem="qOR-PW-uJ7" secondAttribute="trailing" id="M6h-v3-Btu"/>
-                    <constraint firstItem="alN-aa-3RD" firstAttribute="leading" secondItem="rVX-D6-mh0" secondAttribute="trailing" constant="8" symbolic="YES" id="Rt4-iv-Ewv"/>
-                    <constraint firstAttribute="bottom" secondItem="vaN-Pi-U1r" secondAttribute="bottom" id="V63-Gf-95a"/>
-                    <constraint firstItem="ZJH-mc-A6u" firstAttribute="leading" secondItem="kZP-cl-mjG" secondAttribute="trailing" constant="8" symbolic="YES" id="Y4g-gK-U3e"/>
-                    <constraint firstItem="kZP-cl-mjG" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="aAu-fT-nZ2"/>
-                    <constraint firstItem="qOR-PW-uJ7" firstAttribute="top" secondItem="kZP-cl-mjG" secondAttribute="bottom" constant="8" symbolic="YES" id="eKb-g2-IUg"/>
-                    <constraint firstItem="rVX-D6-mh0" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="epf-u3-ozn"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nAs-Ch-hZu" secondAttribute="trailing" constant="20" symbolic="YES" id="hSl-bL-Yge"/>
-                    <constraint firstItem="rVX-D6-mh0" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="qc2-kT-JxQ"/>
-                    <constraint firstItem="qOR-PW-uJ7" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="sMT-oF-wgx"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="alN-aa-3RD" secondAttribute="trailing" constant="20" symbolic="YES" id="tgC-Vs-OPN"/>
-                    <constraint firstItem="ZJH-mc-A6u" firstAttribute="centerY" secondItem="kZP-cl-mjG" secondAttribute="centerY" id="vmF-KE-ddD"/>
+                    <constraint firstItem="qOR-PW-uJ7" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="0yf-L1-kK9"/>
+                    <constraint firstAttribute="trailing" secondItem="vaN-Pi-U1r" secondAttribute="trailing" id="38T-X2-ocz"/>
+                    <constraint firstAttribute="trailing" secondItem="qOR-PW-uJ7" secondAttribute="trailing" id="5Ft-TW-eGO"/>
+                    <constraint firstItem="alN-aa-3RD" firstAttribute="top" secondItem="rVX-D6-mh0" secondAttribute="bottom" constant="8" symbolic="YES" id="8Df-wE-1Wh"/>
+                    <constraint firstItem="vaN-Pi-U1r" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="AMX-Gc-RaD"/>
+                    <constraint firstItem="ZJH-mc-A6u" firstAttribute="leading" secondItem="alN-aa-3RD" secondAttribute="trailing" constant="8" symbolic="YES" id="BYs-YN-ICb"/>
+                    <constraint firstItem="rVX-D6-mh0" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="GaM-Oc-pQg"/>
+                    <constraint firstItem="alN-aa-3RD" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="QC8-dh-wde"/>
+                    <constraint firstItem="kZP-cl-mjG" firstAttribute="top" secondItem="rVX-D6-mh0" secondAttribute="top" id="U8C-2X-yuB"/>
+                    <constraint firstItem="kZP-cl-mjG" firstAttribute="leading" secondItem="rVX-D6-mh0" secondAttribute="trailing" constant="8" symbolic="YES" id="X3K-HF-UeN"/>
+                    <constraint firstAttribute="bottom" secondItem="vaN-Pi-U1r" secondAttribute="bottom" id="Yai-gG-TwP"/>
+                    <constraint firstItem="ZJH-mc-A6u" firstAttribute="centerY" secondItem="alN-aa-3RD" secondAttribute="centerY" id="aX2-2E-tPE"/>
+                    <constraint firstItem="nAs-Ch-hZu" firstAttribute="leading" secondItem="ZJH-mc-A6u" secondAttribute="trailing" constant="8" symbolic="YES" id="lUe-uX-wxg"/>
+                    <constraint firstItem="rVX-D6-mh0" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="oX3-ZH-pxx"/>
+                    <constraint firstItem="nAs-Ch-hZu" firstAttribute="baseline" secondItem="ZJH-mc-A6u" secondAttribute="baseline" id="oco-Ji-HeJ"/>
                     <constraint firstItem="nAs-Ch-hZu" firstAttribute="leading" secondItem="ZJH-mc-A6u" secondAttribute="trailing" constant="20" id="xh7-2u-xbv"/>
+                    <constraint firstItem="qOR-PW-uJ7" firstAttribute="top" secondItem="alN-aa-3RD" secondAttribute="bottom" constant="8" symbolic="YES" id="yZg-qu-QWJ"/>
                     <constraint firstItem="ZJH-mc-A6u" firstAttribute="baseline" secondItem="nAs-Ch-hZu" secondAttribute="baseline" id="yj5-Ub-Jqn"/>
-                    <constraint firstItem="vaN-Pi-U1r" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="z4b-pB-1Pm"/>
                     <constraint firstItem="vaN-Pi-U1r" firstAttribute="top" secondItem="qOR-PW-uJ7" secondAttribute="bottom" id="zIR-WP-5d4"/>
                 </constraints>
             </view>
@@ -865,10 +865,10 @@
     <resources>
         <image name="NSGoLeftTemplate" width="9" height="12"/>
         <image name="NSGoRightTemplate" width="9" height="12"/>
-        <image name="SMPathsExclusiveOrSmall" width="24" height="24"/>
-        <image name="SMPathsIntersectSmall" width="24" height="24"/>
-        <image name="SMPathsNormalSmall" width="24" height="24"/>
-        <image name="SMPathsSubtractSmall" width="24" height="24"/>
-        <image name="SMPathsUnionSmall" width="24" height="24"/>
+        <image name="SMPathsExclusiveOrMini" width="16" height="16"/>
+        <image name="SMPathsIntersectMini" width="16" height="16"/>
+        <image name="SMPathsNormalMini" width="16" height="16"/>
+        <image name="SMPathsSubtractMini" width="16" height="16"/>
+        <image name="SMPathsUnionMini" width="16" height="16"/>
     </resources>
 </document>
