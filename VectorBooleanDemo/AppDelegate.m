@@ -34,6 +34,10 @@ typedef NS_ENUM(NSUInteger, BooleanType) {
     [self updatePaths];
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
+	return YES;
+}
+
 - (void)updatePaths {
     switch (self.exampleIndex) {
         case 0:
