@@ -43,11 +43,11 @@ typedef struct FBBezierCurveData {
 
 + (NSArray *) bezierCurvesFromBezierPath:(NSBezierPath *)path;
 
-+ (id) bezierCurveWithLineStartPoint:(NSPoint)startPoint endPoint:(NSPoint)endPoint;
-+ (id) bezierCurveWithEndPoint1:(NSPoint)endPoint1 controlPoint1:(NSPoint)controlPoint1 controlPoint2:(NSPoint)controlPoint2 endPoint2:(NSPoint)endPoint2;
++ (instancetype) bezierCurveWithLineStartPoint:(NSPoint)startPoint endPoint:(NSPoint)endPoint;
++ (instancetype) bezierCurveWithEndPoint1:(NSPoint)endPoint1 controlPoint1:(NSPoint)controlPoint1 controlPoint2:(NSPoint)controlPoint2 endPoint2:(NSPoint)endPoint2;
 
-- (id) initWithEndPoint1:(NSPoint)endPoint1 controlPoint1:(NSPoint)controlPoint1 controlPoint2:(NSPoint)controlPoint2 endPoint2:(NSPoint)endPoint2 contour:(FBBezierContour *)contour;
-- (id) initWithLineStartPoint:(NSPoint)startPoint endPoint:(NSPoint)endPoint contour:(FBBezierContour *)contour;
+- (instancetype) initWithEndPoint1:(NSPoint)endPoint1 controlPoint1:(NSPoint)controlPoint1 controlPoint2:(NSPoint)controlPoint2 endPoint2:(NSPoint)endPoint2 contour:(FBBezierContour *)contour;
+- (instancetype) initWithLineStartPoint:(NSPoint)startPoint endPoint:(NSPoint)endPoint contour:(FBBezierContour *)contour;
 
 @property (readonly) NSPoint endPoint1;
 @property (readonly) NSPoint controlPoint1;
@@ -66,7 +66,7 @@ typedef struct FBBezierCurveData {
 - (void) splitSubcurvesWithRange:(FBRange)range left:(FBBezierCurve **)leftCurve middle:(FBBezierCurve **)middleCurve right:(FBBezierCurve **)rightCurve;
 
 - (CGFloat) lengthAtParameter:(CGFloat)parameter;
-- (CGFloat) length;
+@property (nonatomic, readonly) CGFloat length;
 
 - (NSPoint) pointFromRightOffset:(CGFloat)offset;
 - (NSPoint) pointFromLeftOffset:(CGFloat)offset;
@@ -76,9 +76,9 @@ typedef struct FBBezierCurveData {
 
 - (FBBezierCurveLocation) closestLocationToPoint:(NSPoint)point;
 
-- (FBBezierCurve *) reversedCurve;	// GPC: added
+@property (nonatomic, readonly, strong) FBBezierCurve *reversedCurve;	// GPC: added
 
-- (NSBezierPath *) bezierPath;
+@property (nonatomic, readonly, copy) NSBezierPath *bezierPath;
 
 - (FBBezierCurve *) clone;
 

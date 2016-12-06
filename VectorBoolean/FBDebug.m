@@ -12,10 +12,10 @@ NSString *FBArrayDescription(NSArray *array)
 {
     NSMutableString *description = [NSMutableString string];
     [description appendString:@"["];
-    for (NSUInteger i = 0; i < [array count]; i++) {
+    for (NSUInteger i = 0; i < array.count; i++) {
         if ( i == 0 )
             [description appendString:@"\n"];
-        [description appendFormat:@"\t%lu\t=\t%@\n", i, [array objectAtIndex:i]];
+        [description appendFormat:@"\t%lu\t=\t%@\n", i, array[i]];
     }
     [description appendString:@"]"];
     return description;

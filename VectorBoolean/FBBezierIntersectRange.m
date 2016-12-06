@@ -30,16 +30,16 @@ extern const CGFloat FBParameterCloseThreshold;
 
 + (id) intersectRangeWithCurve1:(FBBezierCurve *)curve1 parameterRange1:(FBRange)parameterRange1 curve2:(FBBezierCurve *)curve2 parameterRange2:(FBRange)parameterRange2 reversed:(BOOL)reversed
 {
-    return [[[FBBezierIntersectRange alloc] initWithCurve1:curve1 parameterRange1:parameterRange1 curve2:curve2 parameterRange2:parameterRange2 reversed:reversed] autorelease];
+    return [[FBBezierIntersectRange alloc] initWithCurve1:curve1 parameterRange1:parameterRange1 curve2:curve2 parameterRange2:parameterRange2 reversed:reversed];
 }
 
 - (id) initWithCurve1:(FBBezierCurve *)curve1 parameterRange1:(FBRange)parameterRange1 curve2:(FBBezierCurve *)curve2 parameterRange2:(FBRange)parameterRange2 reversed:(BOOL)reversed
 {
     self = [super init];
     if ( self != nil ) {
-        _curve1 = [curve1 retain];
+        _curve1 = curve1;
         _parameterRange1 = parameterRange1;
-        _curve2 = [curve2 retain];
+        _curve2 = curve2;
         _parameterRange2 = parameterRange2;
         _reversed = reversed;
         _needToComputeCurve1 = YES;
@@ -48,19 +48,6 @@ extern const CGFloat FBParameterCloseThreshold;
     return self;
 }
 
-- (void) dealloc
-{
-    [_curve1 release];
-    [_curve2 release];
-    [_curve1LeftBezier release];
-    [_curve1MiddleBezier release];
-    [_curve1RightBezier release];
-    [_curve2LeftBezier release];
-    [_curve2MiddleBezier release];
-    [_curve2RightBezier release];
-
-    [super dealloc];
-}
 
 - (FBBezierCurve *) curve1LeftBezier
 {
@@ -102,12 +89,15 @@ extern const CGFloat FBParameterCloseThreshold;
 {
     if ( !_needToComputeCurve1 )
         return;
-    
-    [_curve1 splitSubcurvesWithRange:_parameterRange1 left:&_curve1LeftBezier middle:&_curve1MiddleBezier right:&_curve1RightBezier];
-    [_curve1LeftBezier retain]; // the out parameters are autoreleased
-    [_curve1MiddleBezier retain];
-    [_curve1RightBezier retain];
-    
+	
+	FBBezierCurve *curve1LeftBezier;
+	FBBezierCurve *curve1MiddleBezier;
+	FBBezierCurve *curve1RightBezier;
+    [_curve1 splitSubcurvesWithRange:_parameterRange1 left:&curve1LeftBezier middle:&curve1MiddleBezier right:&curve1RightBezier];
+	_curve1LeftBezier = curve1LeftBezier;
+	_curve1MiddleBezier = curve1MiddleBezier;
+	_curve1RightBezier = curve1RightBezier;
+	
     _needToComputeCurve1 = NO;
 }
 
@@ -115,12 +105,15 @@ extern const CGFloat FBParameterCloseThreshold;
 {
     if ( !_needToComputeCurve2 )
         return;
-    
-    [_curve2 splitSubcurvesWithRange:_parameterRange2 left:&_curve2LeftBezier middle:&_curve2MiddleBezier right:&_curve2RightBezier];
-    [_curve2LeftBezier retain]; // the out parameters are autoreleased
-    [_curve2MiddleBezier retain];
-    [_curve2RightBezier retain];
-    
+	
+	FBBezierCurve *curve2LeftBezier;
+	FBBezierCurve *curve2MiddleBezier;
+	FBBezierCurve *curve2RightBezier;
+    [_curve2 splitSubcurvesWithRange:_parameterRange2 left:&curve2LeftBezier middle:&curve2MiddleBezier right:&curve2RightBezier];
+	_curve2LeftBezier = curve2LeftBezier;
+	_curve2MiddleBezier = curve2MiddleBezier;
+	_curve2RightBezier = curve2RightBezier;
+	
     _needToComputeCurve2 = NO;
 }
 
@@ -162,17 +155,11 @@ extern const CGFloat FBParameterCloseThreshold;
 {
     _needToComputeCurve1 = YES;
     _needToComputeCurve2 = YES;
-    [_curve1LeftBezier release];
     _curve1LeftBezier = nil;
-    [_curve1MiddleBezier release];
     _curve1MiddleBezier = nil;
-    [_curve1RightBezier release];
     _curve1RightBezier = nil;
-    [_curve2LeftBezier release];
     _curve2LeftBezier = nil;
-    [_curve2MiddleBezier release];
     _curve2MiddleBezier = nil;
-    [_curve2RightBezier release];
     _curve2RightBezier = nil;
 }
 

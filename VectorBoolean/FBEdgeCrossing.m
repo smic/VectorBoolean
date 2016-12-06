@@ -23,7 +23,7 @@
 
 + (id) crossingWithIntersection:(FBBezierIntersection *)intersection
 {
-    return [[[FBEdgeCrossing alloc] initWithIntersection:intersection] autorelease];
+    return [[FBEdgeCrossing alloc] initWithIntersection:intersection];
 }
 
 - (id) initWithIntersection:(FBBezierIntersection *)intersection
@@ -31,18 +31,12 @@
     self = [super init];
     
     if ( self != nil ) {
-        _intersection = [intersection retain];
+        _intersection = intersection;
     }
     
     return self;
 }
 
-- (void)dealloc
-{
-    [_intersection release];
-    
-    [super dealloc];
-}
 
 - (void) removeFromEdge
 {
@@ -143,7 +137,7 @@
             _entry ? @"yes" : @"no",
             _processed ? @"yes" : @"no",
             _selfCrossing ? @"yes" : @"no",
-            [_intersection description]
+            _intersection.description
             ];
 }
 

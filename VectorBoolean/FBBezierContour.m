@@ -23,12 +23,12 @@
 - (BOOL) contourAndSelfIntersectingContoursContainPoint:(NSPoint)point;
 - (void) addSelfIntersectingContoursToArray:(NSMutableArray *)contours originalContour:(FBBezierContour *)originalContour;
 
-@property (readonly) NSArray *selfIntersectingContours;
+@property (weak, readonly) NSArray *selfIntersectingContours;
 
 - (void) startingEdge:(FBBezierCurve **)outEdge parameter:(CGFloat *)outParameter point:(NSPoint *)outPoint;
 - (BOOL) markCrossingsOnEdge:(FBBezierCurve *)edge startParameter:(CGFloat)startParameter stopParameter:(CGFloat)stopParameter otherContours:(NSArray *)otherContours isEntry:(BOOL)startIsEntry;
 
-@property (readonly) NSMutableArray *overlaps_;
+@property (weak, readonly) NSMutableArray *overlaps_;
 
 @end
 
@@ -39,7 +39,7 @@
 
 + (id) bezierContourWithCurve:(FBBezierCurve *)curve
 {
-    FBBezierContour *contour = [[[FBBezierContour alloc] init] autorelease];
+    FBBezierContour *contour = [[FBBezierContour alloc] init];
     [contour addCurve:curve];
     return contour;
 }
@@ -54,13 +54,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_edges release];
-    [_overlaps release];
-    [_bezPathCache release];
-    [super dealloc];
-}
 
 - (NSMutableArray *) overlaps_
 {
@@ -75,11 +68,10 @@
     if ( curve == nil )
         return;
     curve.contour = self;
-    curve.index = [_edges count];
+    curve.index = _edges.count;
     [_edges addObject:curve];
     _bounds = NSZeroRect; // force the bounds to be recalculated
     _boundingRect = NSZeroRect;
-	[_bezPathCache release];
 	_bezPathCache = nil;
 }
 
@@ -136,7 +128,7 @@
         return _bounds;
     
     // If no edges, no bounds
-    if ( [_edges count] == 0 )
+    if ( _edges.count == 0 )
         return NSZeroRect;
     
     NSRect totalBounds = NSZeroRect;    
@@ -160,7 +152,7 @@
         return _boundingRect;
     
     // If no edges, no bounds
-    if ( [_edges count] == 0 )
+    if ( _edges.count == 0 )
         return NSZeroRect;
     
     NSRect totalBounds = NSZeroRect;
@@ -179,10 +171,10 @@
 
 - (NSPoint) firstPoint
 {
-    if ( [_edges count] == 0 )
+    if ( _edges.count == 0 )
         return NSZeroPoint;
 
-    FBBezierCurve *edge = [_edges objectAtIndex:0];
+    FBBezierCurve *edge = _edges.firstObject;
     return edge.endPoint1;
 }
 
@@ -243,7 +235,7 @@
             previousIntersection = intersection;
         }];
         if ( intersectRange != nil && [testEdge crossesEdge:edge atIntersectRange:intersectRange] ) {
-            block([intersectRange middleIntersection]);
+            block(intersectRange.middleIntersection);
         }
     }
 }
@@ -253,10 +245,10 @@
     // When marking we need to start at a point that is clearly either inside or outside
     //  the other graph, otherwise we could mark the crossings exactly opposite of what
     //  they're supposed to be.
-    if ( [self.edges count] == 0 )
+    if ( self.edges.count == 0 )
         return nil;
     
-    FBBezierCurve *startEdge = [self.edges objectAtIndex:0];
+    FBBezierCurve *startEdge = self.edges.firstObject;
     FBBezierCurve *stopValue = startEdge;
     while ( startEdge.isStartShared ) {
         startEdge = startEdge.next;
@@ -392,8 +384,8 @@
 		}
 		
 		[path closePath];
-		[path setWindingRule:NSEvenOddWindingRule];
-		_bezPathCache = [path retain];
+		path.windingRule = NSEvenOddWindingRule;
+		_bezPathCache = path;
     }
 	
     return _bezPathCache;
@@ -403,11 +395,11 @@
 - (void) close
 {
 	// adds an element to connect first and last points on the contour
-	if ( [_edges count] == 0 )
+	if ( _edges.count == 0 )
         return;
     
-    FBBezierCurve *first = [_edges objectAtIndex:0];
-    FBBezierCurve *last = [_edges lastObject];
+    FBBezierCurve *first = _edges.firstObject;
+    FBBezierCurve *last = _edges.lastObject;
     
     if ( !FBArePointsClose(first.endPoint1, last.endPoint2) )
         [self addCurve:[FBBezierCurve bezierCurveWithLineStartPoint:last.endPoint2 endPoint:first.endPoint1]];
@@ -421,7 +413,7 @@
 	for ( FBBezierCurve *edge in _edges )
 		[revContour addReverseCurve:edge];
 	
-	return [revContour autorelease];
+	return revContour;
 }
 
 

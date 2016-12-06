@@ -75,7 +75,7 @@ FBContourDirection;
 @property (readonly) NSRect boundingRect;
 @property (readonly) NSPoint firstPoint;
 @property FBContourInside inside;
-@property (readonly) NSArray *intersectingContours;
+@property (weak, readonly) NSArray *intersectingContours;
 
 - (BOOL) crossesOwnContour:(FBBezierContour *)contour;
 

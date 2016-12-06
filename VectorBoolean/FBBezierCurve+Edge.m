@@ -142,10 +142,10 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
     if ( _contour == nil )
         return self;
     
-    if ( _index >= ([self.contour.edges count] - 1) )
-        return [self.contour.edges objectAtIndex:0];
+    if ( _index >= (self.contour.edges.count - 1) )
+        return self.contour.edges.firstObject;
     
-    return [self.contour.edges objectAtIndex:_index + 1];
+    return self.contour.edges[_index + 1];
 }
 
 - (FBBezierCurve *)previous
@@ -154,9 +154,9 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
         return self;
     
     if ( _index == 0 )
-        return [self.contour.edges objectAtIndex:[self.contour.edges count] - 1];
+        return self.contour.edges.lastObject;
     
-    return [self.contour.edges objectAtIndex:_index - 1];
+    return self.contour.edges[_index - 1];
 }
 
 - (FBBezierCurve *) nextNonpoint
@@ -177,7 +177,7 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
 
 - (BOOL) hasCrossings
 {
-    return _crossings != nil && [_crossings count] > 0;
+    return _crossings != nil && _crossings.count > 0;
 }
 
 - (void) crossingsWithBlock:(void (^)(FBEdgeCrossing *crossing, BOOL *stop))block
@@ -199,7 +199,7 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
         return;
     
     BOOL stop = NO;
-    NSArray *crossingsCopy = [[_crossings copy] autorelease];
+    NSArray *crossingsCopy = [_crossings copy];
     for (FBEdgeCrossing *crossing in crossingsCopy) {
         block(crossing, &stop);
         if ( stop )
@@ -209,10 +209,10 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
 
 - (FBEdgeCrossing *) nextCrossing:(FBEdgeCrossing *)crossing
 {
-    if ( _crossings == nil || crossing.index >= ([_crossings count] - 1) )
+    if ( _crossings == nil || crossing.index >= (_crossings.count - 1) )
         return nil;
     
-    return [_crossings objectAtIndex:crossing.index + 1];
+    return _crossings[crossing.index + 1];
 }
 
 - (FBEdgeCrossing *) previousCrossing:(FBEdgeCrossing *)crossing
@@ -220,7 +220,7 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
     if ( _crossings == nil || crossing.index == 0 )
         return nil;
     
-    return [_crossings objectAtIndex:crossing.index - 1];
+    return _crossings[crossing.index - 1];
 }
 
 - (void) intersectingEdgesWithBlock:(void (^)(FBBezierCurve *intersectingEdge))block
@@ -245,16 +245,16 @@ static void FBComputeEdge2RangeTangentCurves(FBBezierCurve *edge, FBBezierInters
 
 - (FBEdgeCrossing *) firstCrossing
 {
-    if ( _crossings == nil || [_crossings count] == 0 )
+    if ( _crossings == nil || _crossings.count == 0 )
         return nil;
-    return [_crossings objectAtIndex:0];
+    return _crossings.firstObject;
 }
 
 - (FBEdgeCrossing *) lastCrossing
 {
-    if ( _crossings == nil || [_crossings count] == 0 )
+    if ( _crossings == nil || _crossings.count == 0 )
         return nil;
-    return [_crossings objectAtIndex:[_crossings count] - 1];
+    return _crossings.lastObject;
 }
 
 - (FBEdgeCrossing *) firstNonselfCrossing

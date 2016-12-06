@@ -17,8 +17,8 @@
 //  crossing's counterpart in the other FBBezierGraph
 @interface FBEdgeCrossing : NSObject {
     FBBezierIntersection *_intersection;
-    FBBezierCurve *_edge;
-    FBEdgeCrossing *_counterpart;
+    __weak FBBezierCurve *_edge;
+    __weak FBEdgeCrossing *_counterpart;
     BOOL _fromCrossingOverlap;
     BOOL _entry;
     BOOL _processed;
@@ -31,8 +31,8 @@
 
 - (void) removeFromEdge;
 
-@property (assign) FBBezierCurve *edge;
-@property (assign) FBEdgeCrossing *counterpart;
+@property (weak) FBBezierCurve *edge;
+@property (weak) FBEdgeCrossing *counterpart;
 @property (readonly) CGFloat order;
 @property (getter = isEntry) BOOL entry;
 @property (getter = isProcessed) BOOL processed;
@@ -41,16 +41,16 @@
 @property NSUInteger index;
 
 // An easy way to iterate crossings. It doesn't wrap when it reaches the end.
-@property (readonly) FBEdgeCrossing *next;
-@property (readonly) FBEdgeCrossing *previous;
-@property (readonly) FBEdgeCrossing *nextNonself;
-@property (readonly) FBEdgeCrossing *previousNonself;
+@property (weak, readonly) FBEdgeCrossing *next;
+@property (weak, readonly) FBEdgeCrossing *previous;
+@property (weak, readonly) FBEdgeCrossing *nextNonself;
+@property (weak, readonly) FBEdgeCrossing *previousNonself;
 
 // These properties pass through to the underlying intersection
 @property (readonly) CGFloat parameter;
-@property (readonly) FBBezierCurve *curve;
-@property (readonly) FBBezierCurve *leftCurve;
-@property (readonly) FBBezierCurve *rightCurve;
+@property (weak, readonly) FBBezierCurve *curve;
+@property (weak, readonly) FBBezierCurve *leftCurve;
+@property (weak, readonly) FBBezierCurve *rightCurve;
 @property (readonly, getter = isAtStart) BOOL atStart;
 @property (readonly, getter = isAtEnd) BOOL atEnd;
 @property (readonly) NSPoint location;

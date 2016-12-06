@@ -23,8 +23,8 @@
 + (id) curveLocationWithEdge:(FBBezierCurve *)edge parameter:(CGFloat)parameter distance:(CGFloat)distance;
 - (id) initWithEdge:(FBBezierCurve *)edge parameter:(CGFloat)parameter distance:(CGFloat)distance;
 
-@property (retain) FBBezierGraph *graph;
-@property (retain) FBBezierContour *contour;
+@property (strong) FBBezierGraph *graph;
+@property (strong) FBBezierContour *contour;
 @property (readonly) FBBezierCurve *edge;
 @property (readonly) CGFloat parameter;
 @property (readonly) CGFloat distance;

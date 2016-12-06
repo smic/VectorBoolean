@@ -657,7 +657,7 @@
 - (NSString *)stringFromPath:(NSBezierPath *)path {
     NSMutableString *string = [NSMutableString string];
     
-    NSInteger numElements = [path elementCount];
+    NSInteger numElements = path.elementCount;
     NSPoint points[3];
     
     for (NSUInteger i = 0; i < numElements; i++) {
@@ -695,7 +695,7 @@
     NSScanner *scanner = [NSScanner scannerWithString:string];
     NSBezierPath *path = [NSBezierPath bezierPath];
     NSPoint points[3];
-    while (![scanner isAtEnd]) {
+    while (!scanner.atEnd) {
         if ([scanner scanString:@"M" intoString:NULL]) {
             if (![scanner scanDouble:&(points[0].x)]) {
                 break;

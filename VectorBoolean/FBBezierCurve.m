@@ -935,9 +935,9 @@ static void FBBezierCurveDataIntersectionsWithBezierCurve(FBBezierCurveData me, 
     //  only lines are a special case.
     
     NSPoint lastPoint = NSZeroPoint;
-    NSMutableArray *bezierCurves = [NSMutableArray arrayWithCapacity:[path elementCount]];
+    NSMutableArray *bezierCurves = [NSMutableArray arrayWithCapacity:path.elementCount];
     
-    for (NSUInteger i = 0; i < [path elementCount]; i++) {
+    for (NSUInteger i = 0; i < path.elementCount; i++) {
         NSBezierElement element = [path fb_elementAtIndex:i];
         
         switch (element.kind) {
@@ -971,17 +971,17 @@ static void FBBezierCurveDataIntersectionsWithBezierCurve(FBBezierCurveData me, 
 
 + (id) bezierCurveWithLineStartPoint:(NSPoint)startPoint endPoint:(NSPoint)endPoint
 {
-    return [[[FBBezierCurve alloc] initWithLineStartPoint:startPoint endPoint:endPoint contour:nil] autorelease];
+    return [[FBBezierCurve alloc] initWithLineStartPoint:startPoint endPoint:endPoint contour:nil];
 }
 
 + (id) bezierCurveWithEndPoint1:(NSPoint)endPoint1 controlPoint1:(NSPoint)controlPoint1 controlPoint2:(NSPoint)controlPoint2 endPoint2:(NSPoint)endPoint2
 {
-    return [[[FBBezierCurve alloc] initWithEndPoint1:endPoint1 controlPoint1:controlPoint1 controlPoint2:controlPoint2 endPoint2:endPoint2 contour:nil] autorelease];
+    return [[FBBezierCurve alloc] initWithEndPoint1:endPoint1 controlPoint1:controlPoint1 controlPoint2:controlPoint2 endPoint2:endPoint2 contour:nil];
 }
 
 + (id) bezierCurveWithBezierCurveData:(FBBezierCurveData)data
 {
-    return [[[FBBezierCurve alloc] initWithBezierCurveData:data] autorelease];
+    return [[FBBezierCurve alloc] initWithBezierCurveData:data];
 }
 
 - (id) initWithBezierCurveData:(FBBezierCurveData)data
@@ -1024,12 +1024,6 @@ static void FBBezierCurveDataIntersectionsWithBezierCurve(FBBezierCurveData me, 
     return self;
 }
 
-- (void)dealloc
-{
-    [_crossings release];
-
-    [super dealloc];
-}
 
 - (BOOL) isEqual:(id)object
 {

@@ -29,7 +29,7 @@ const CGFloat FBParameterCloseThreshold = 1e-4;
 
 + (id) intersectionWithCurve1:(FBBezierCurve *)curve1 parameter1:(CGFloat)parameter1 curve2:(FBBezierCurve *)curve2 parameter2:(CGFloat)parameter2
 {
-    return [[[FBBezierIntersection alloc] initWithCurve1:curve1 parameter1:parameter1 curve2:curve2 parameter2:parameter2] autorelease];
+    return [[FBBezierIntersection alloc] initWithCurve1:curve1 parameter1:parameter1 curve2:curve2 parameter2:parameter2];
 }
 
 - (id) initWithCurve1:(FBBezierCurve *)curve1 parameter1:(CGFloat)parameter1 curve2:(FBBezierCurve *)curve2 parameter2:(CGFloat)parameter2
@@ -37,9 +37,9 @@ const CGFloat FBParameterCloseThreshold = 1e-4;
     self = [super init];
     
     if ( self != nil ) {
-        _curve1 = [curve1 retain];
+        _curve1 = curve1;
         _parameter1 = parameter1;
-        _curve2 = [curve2 retain];
+        _curve2 = curve2;
         _parameter2 = parameter2;
         _needToComputeCurve1 = YES;
         _needToComputeCurve2 = YES;
@@ -48,17 +48,6 @@ const CGFloat FBParameterCloseThreshold = 1e-4;
     return self;
 }
 
-- (void)dealloc
-{
-    [_curve1 release];
-    [_curve2 release];
-    [_curve1LeftBezier release];
-    [_curve1RightBezier release];
-    [_curve2LeftBezier release];
-    [_curve2RightBezier release];
-    
-    [super dealloc];
-}
 
 - (NSPoint) location
 {
@@ -149,10 +138,12 @@ const CGFloat FBParameterCloseThreshold = 1e-4;
 {
     if ( !_needToComputeCurve1 )
         return;
-    
-    _location = [_curve1 pointAtParameter:_parameter1 leftBezierCurve:&_curve1LeftBezier rightBezierCurve:&_curve1RightBezier];
-    [_curve1LeftBezier retain];
-    [_curve1RightBezier retain];
+	
+	FBBezierCurve *curve1LeftBezier;
+	FBBezierCurve *curve1RightBezier;
+    _location = [_curve1 pointAtParameter:_parameter1 leftBezierCurve:&curve1LeftBezier rightBezierCurve:&curve1RightBezier];
+    _curve1LeftBezier = curve1LeftBezier;
+    _curve1RightBezier = curve1RightBezier;
     
     _needToComputeCurve1 = NO;
 }
@@ -161,10 +152,12 @@ const CGFloat FBParameterCloseThreshold = 1e-4;
 {
     if ( !_needToComputeCurve2 )
         return;
-    
-    [_curve2 pointAtParameter:_parameter2 leftBezierCurve:&_curve2LeftBezier rightBezierCurve:&_curve2RightBezier];
-    [_curve2LeftBezier retain];
-    [_curve2RightBezier retain];
+	
+	FBBezierCurve *curve2LeftBezier;
+	FBBezierCurve *curve2RightBezier;
+    [_curve2 pointAtParameter:_parameter2 leftBezierCurve:&curve2LeftBezier rightBezierCurve:&curve2RightBezier];
+    _curve2LeftBezier = curve2LeftBezier;
+    _curve2RightBezier = curve2RightBezier;
     
     _needToComputeCurve2 = NO;
 }

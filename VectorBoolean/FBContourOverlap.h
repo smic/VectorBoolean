@@ -37,8 +37,8 @@
 
 + (id) contourOverlap;
 
-@property (readonly) FBBezierContour *contour1;
-@property (readonly) FBBezierContour *contour2;
+@property (weak, readonly) FBBezierContour *contour1;
+@property (weak, readonly) FBBezierContour *contour2;
 
 - (void) addOverlap:(FBBezierIntersectRange *)range forEdge1:(FBBezierCurve *)edge1 edge2:(FBBezierCurve *)edge2;
 - (void) runsWithBlock:(void (^)(FBEdgeOverlapRun *run, BOOL *stop))block;

@@ -80,12 +80,12 @@
 
 + (id) bezierGraphWithBezierPath:(NSBezierPath *)path
 {
-    return [[[FBBezierGraph alloc] initWithBezierPath:path] autorelease];
+    return [[FBBezierGraph alloc] initWithBezierPath:path];
 }
 
 + (id) bezierGraph
 {
-    return [[[FBBezierGraph alloc] init] autorelease];
+    return [[FBBezierGraph alloc] init];
 }
 
 - (id) initWithBezierPath:(NSBezierPath *)path
@@ -101,7 +101,7 @@
         _contours = [[NSMutableArray alloc] initWithCapacity:2];
             
         FBBezierContour *contour = nil;
-        for (NSUInteger i = 0; i < [path elementCount]; i++) {
+        for (NSUInteger i = 0; i < path.elementCount; i++) {
             NSBezierElement element = [path fb_elementAtIndex:i];
             
             switch (element.kind) {
@@ -115,7 +115,7 @@
 					wasClosed = NO;
 										
 					// Start a new contour
-                    contour = [[[FBBezierContour alloc] init] autorelease];
+                    contour = [[FBBezierContour alloc] init];
                     [self addContour:contour];
                     
                     lastPoint = element.point;
@@ -153,8 +153,8 @@
                     // we check so as not to add degenerate line segments which 
                     // blow up the clipping code.
                     
-                    if ([[contour edges] count]) {
-                        FBBezierCurve *firstEdge = [contour.edges objectAtIndex:0];
+                    if (contour.edges.count) {
+                        FBBezierCurve *firstEdge = contour.edges[0];
                         NSPoint firstPoint = firstEdge.endPoint1;
                         
                         // Skip degenerate line segments
@@ -187,12 +187,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [_contours release];
-    
-    [super dealloc];
-}
 
 ////////////////////////////////////////////////////////////////////////
 // Boolean operations
@@ -249,9 +243,9 @@
 {
     // Finally, process the contours that don't cross anything else. They're either
     //  completely contained in another contour, or disjoint.
-    NSMutableArray *ourNonintersectingContours = [[[self nonintersectingContours] mutableCopy] autorelease];
-    NSMutableArray *theirNonintersectinContours = [[[graph nonintersectingContours] mutableCopy] autorelease];
-    NSMutableArray *finalNonintersectingContours = [[ourNonintersectingContours mutableCopy] autorelease];
+    NSMutableArray *ourNonintersectingContours = [[self nonintersectingContours] mutableCopy];
+    NSMutableArray *theirNonintersectinContours = [[graph nonintersectingContours] mutableCopy];
+    NSMutableArray *finalNonintersectingContours = [ourNonintersectingContours mutableCopy];
     [finalNonintersectingContours addObjectsFromArray:theirNonintersectinContours];
     [self unionEquivalentNonintersectingContours:ourNonintersectingContours withContours:theirNonintersectinContours results:finalNonintersectingContours];
     
@@ -277,10 +271,10 @@
 
 - (void) unionEquivalentNonintersectingContours:(NSMutableArray *)ourNonintersectingContours withContours:(NSMutableArray *)theirNonintersectingContours results:(NSMutableArray *)results
 {
-    for (NSUInteger ourIndex = 0; ourIndex < [ourNonintersectingContours count]; ourIndex++) {
-        FBBezierContour *ourContour = [ourNonintersectingContours objectAtIndex:ourIndex];
-        for (NSUInteger theirIndex = 0; theirIndex < [theirNonintersectingContours count]; theirIndex++) {
-            FBBezierContour *theirContour = [theirNonintersectingContours objectAtIndex:theirIndex];
+    for (NSUInteger ourIndex = 0; ourIndex < ourNonintersectingContours.count; ourIndex++) {
+        FBBezierContour *ourContour = ourNonintersectingContours[ourIndex];
+        for (NSUInteger theirIndex = 0; theirIndex < theirNonintersectingContours.count; theirIndex++) {
+            FBBezierContour *theirContour = theirNonintersectingContours[theirIndex];
             
             if ( ![ourContour isEquivalent:theirContour] )
                 continue;
@@ -336,9 +330,9 @@
 {
     // Finally, process the contours that don't cross anything else. They're either
     //  completely contained in another contour, or disjoint.
-    NSMutableArray *ourNonintersectingContours = [[[self nonintersectingContours] mutableCopy] autorelease];
-    NSMutableArray *theirNonintersectinContours = [[[graph nonintersectingContours] mutableCopy] autorelease];
-    NSMutableArray *finalNonintersectingContours = [NSMutableArray arrayWithCapacity:[ourNonintersectingContours count] + [theirNonintersectinContours count]];
+    NSMutableArray *ourNonintersectingContours = [[self nonintersectingContours] mutableCopy];
+    NSMutableArray *theirNonintersectinContours = [[graph nonintersectingContours] mutableCopy];
+    NSMutableArray *finalNonintersectingContours = [NSMutableArray arrayWithCapacity:ourNonintersectingContours.count + theirNonintersectinContours.count];
     [self intersectEquivalentNonintersectingContours:ourNonintersectingContours withContours:theirNonintersectinContours results:finalNonintersectingContours];
     // Since we're doing an intersect, assume that most of these non-crossing contours shouldn't be in
     //  the final result.
@@ -364,10 +358,10 @@
 
 - (void) intersectEquivalentNonintersectingContours:(NSMutableArray *)ourNonintersectingContours withContours:(NSMutableArray *)theirNonintersectingContours results:(NSMutableArray *)results
 {
-    for (NSUInteger ourIndex = 0; ourIndex < [ourNonintersectingContours count]; ourIndex++) {
-        FBBezierContour *ourContour = [ourNonintersectingContours objectAtIndex:ourIndex];
-        for (NSUInteger theirIndex = 0; theirIndex < [theirNonintersectingContours count]; theirIndex++) {
-            FBBezierContour *theirContour = [theirNonintersectingContours objectAtIndex:theirIndex];
+    for (NSUInteger ourIndex = 0; ourIndex < ourNonintersectingContours.count; ourIndex++) {
+        FBBezierContour *ourContour = ourNonintersectingContours[ourIndex];
+        for (NSUInteger theirIndex = 0; theirIndex < theirNonintersectingContours.count; theirIndex++) {
+            FBBezierContour *theirContour = theirNonintersectingContours[theirIndex];
             
             if ( ![ourContour isEquivalent:theirContour] )
                 continue;
@@ -414,9 +408,9 @@
     
     // Finally, process the contours that don't cross anything else. They're either
     //  completely contained in another contour, or disjoint.
-    NSMutableArray *ourNonintersectingContours = [[[self nonintersectingContours] mutableCopy] autorelease];
-    NSMutableArray *theirNonintersectinContours = [[[graph nonintersectingContours] mutableCopy] autorelease];
-    NSMutableArray *finalNonintersectingContours = [NSMutableArray arrayWithCapacity:[ourNonintersectingContours count] + [theirNonintersectinContours count]];
+    NSMutableArray *ourNonintersectingContours = [[self nonintersectingContours] mutableCopy];
+    NSMutableArray *theirNonintersectinContours = [[graph nonintersectingContours] mutableCopy];
+    NSMutableArray *finalNonintersectingContours = [NSMutableArray arrayWithCapacity:ourNonintersectingContours.count + theirNonintersectinContours.count];
     [self differenceEquivalentNonintersectingContours:ourNonintersectingContours withContours:theirNonintersectinContours results:finalNonintersectingContours];
     
     // We're doing an subtraction, so assume none of the contours should be in the final result
@@ -449,10 +443,10 @@
 
 - (void) differenceEquivalentNonintersectingContours:(NSMutableArray *)ourNonintersectingContours withContours:(NSMutableArray *)theirNonintersectingContours results:(NSMutableArray *)results
 {
-    for (NSUInteger ourIndex = 0; ourIndex < [ourNonintersectingContours count]; ourIndex++) {
-        FBBezierContour *ourContour = [ourNonintersectingContours objectAtIndex:ourIndex];
-        for (NSUInteger theirIndex = 0; theirIndex < [theirNonintersectingContours count]; theirIndex++) {
-            FBBezierContour *theirContour = [theirNonintersectingContours objectAtIndex:theirIndex];
+    for (NSUInteger ourIndex = 0; ourIndex < ourNonintersectingContours.count; ourIndex++) {
+        FBBezierContour *ourContour = ourNonintersectingContours[ourIndex];
+        for (NSUInteger theirIndex = 0; theirIndex < theirNonintersectingContours.count; theirIndex++) {
+            FBBezierContour *theirContour = theirNonintersectingContours[theirIndex];
             
             if ( ![ourContour isEquivalent:theirContour] )
                 continue;
@@ -549,7 +543,7 @@
     // Be sure to mark the winding rule as even odd, or interior contours (holes)
     //  won't get filled/left alone properly.
     NSBezierPath *path = [NSBezierPath bezierPath];
-    [path setWindingRule:NSEvenOddWindingRule];
+    path.windingRule = NSEvenOddWindingRule;
 
     for (FBBezierContour *contour in _contours) 
 	{
@@ -691,9 +685,9 @@
 {
     // Find all intersections and, if they cross other contours in this graph, create crossings for them, and insert
     //  them into each contour's edges.
-    NSMutableArray *remainingContours = [[self.contours mutableCopy] autorelease];
-    while ( [remainingContours count] > 0 ) {
-        FBBezierContour *firstContour = [remainingContours lastObject];
+    NSMutableArray *remainingContours = [self.contours mutableCopy];
+    while ( remainingContours.count > 0 ) {
+        FBBezierContour *firstContour = remainingContours.lastObject;
         for (FBBezierContour *secondContour in remainingContours) {
             // We don't handle self-intersections on the contour this way, so skip them here
             if ( firstContour == secondContour )
@@ -752,7 +746,7 @@
     // Compute the bounds of the graph by unioning together the bounds of the individual contours
     if ( !NSEqualRects(_bounds, NSZeroRect) )
         return _bounds;
-    if ( [_contours count] == 0 )
+    if ( _contours.count == 0 )
         return NSZeroRect;
     
     for (FBBezierContour *contour in _contours)
@@ -918,7 +912,7 @@
         return NO;
     
     // In the beginning all our contours are possible containers for the test contour.
-    NSMutableArray *containers = [[_contours mutableCopy] autorelease];
+    NSMutableArray *containers = [_contours mutableCopy];
     
     // Each time through the loop we split the test contour into any increasing amount of pieces
     //  (halves, thirds, quarters, etc) and send a ray along the boundaries. In order to increase
@@ -950,12 +944,12 @@
         }
         
         // If we've eliminated all the contours, then nothing contains the test contour, and we're done
-        if ( [containers count] == 0 )
+        if ( containers.count == 0 )
             return NO;
         // We were able to eliminate someone, and we're down to one, so we're done. If the eliminateContainers: method
         //  failed, we can't make any assumptions about the contains, so just let it go again.
         if ( didEliminate ) 
-            return ([containers count] & 1) == 1;
+            return (containers.count & 1) == 1;
     }
 
     // This is a curious case, because by now we've sent rays that went through every integral cordinate of the test contour.
@@ -978,11 +972,11 @@
             [rayIntersections addObject:intersection];
         }];
     }
-    if ( [rayIntersections count] == 0 )
+    if ( rayIntersections.count == 0 )
         return NO; // shouldn't happen
     
     // Next go through and find the lowest and highest
-    FBBezierIntersection *firstRayIntersection = [rayIntersections objectAtIndex:0];
+    FBBezierIntersection *firstRayIntersection = rayIntersections.firstObject;
     *testMinimum = firstRayIntersection.location;
     *testMaximum = *testMinimum;    
     for (FBBezierIntersection *intersection in rayIntersections) {
@@ -1098,8 +1092,8 @@
         return NO;
     
     // Find all the containers on either side of the otherContour
-    NSMutableArray *crossingsBeforeMinimum = [NSMutableArray arrayWithCapacity:[containers count]];
-    NSMutableArray *crossingsAfterMaximum = [NSMutableArray arrayWithCapacity:[containers count]];
+    NSMutableArray *crossingsBeforeMinimum = [NSMutableArray arrayWithCapacity:containers.count];
+    NSMutableArray *crossingsAfterMaximum = [NSMutableArray arrayWithCapacity:containers.count];
     BOOL foundCrossings = [self findCrossingsOnContainers:containers onRay:ray beforeMinimum:testMinimum afterMaximum:testMaximum crossingsBefore:crossingsBeforeMinimum crossingsAfter:crossingsAfterMaximum];
     if ( !foundCrossings )
         return NO;
@@ -1123,7 +1117,7 @@
 - (NSArray *) contoursFromCrossings:(NSArray *)crossings
 {
     // Determine all the unique contours in the array of crossings
-    NSMutableArray *contours = [NSMutableArray arrayWithCapacity:[crossings count]];
+    NSMutableArray *contours = [NSMutableArray arrayWithCapacity:crossings.count];
     for (FBEdgeCrossing *crossing in crossings) {
         if ( ![contours containsObject:crossing.edge.contour] )
             [contours addObject:crossing.edge.contour];
@@ -1136,7 +1130,7 @@
     // If a contour appears in crossings1, but not crossings2, remove all the associated crossings from 
     //  crossings1.
     
-    NSMutableArray *containersToRemove = [NSMutableArray arrayWithCapacity:[crossings1 count]];
+    NSMutableArray *containersToRemove = [NSMutableArray arrayWithCapacity:crossings1.count];
     for (FBEdgeCrossing *crossingToTest in crossings1) {
         FBBezierContour *containerToTest = crossingToTest.edge.contour;
         // See if this contour exists in the other array
@@ -1158,7 +1152,7 @@
 {
     // Remove contours that cross the ray an even number of times. By the even/odd rule this means
     //  they can't contain the test contour.
-    NSMutableArray *containersToRemove = [NSMutableArray arrayWithCapacity:[crossings count]];
+    NSMutableArray *containersToRemove = [NSMutableArray arrayWithCapacity:crossings.count];
     for (FBEdgeCrossing *crossingToTest in crossings) {
         // For this contour, count how many times it appears in the crossings array
         FBBezierContour *containerToTest = crossingToTest.edge.contour;
@@ -1180,7 +1174,7 @@
     //  contours.
     
     // First walk through and identify which crossings to remove
-    NSMutableArray *crossingsToRemove = [NSMutableArray arrayWithCapacity:[crossings count]];
+    NSMutableArray *crossingsToRemove = [NSMutableArray arrayWithCapacity:crossings.count];
     for (FBBezierContour *contour in containersToRemove) {
         for (FBEdgeCrossing *crossing in crossings) {
             if ( crossing.edge.contour == contour )
@@ -1240,7 +1234,7 @@
     FBEdgeCrossing *crossing = [self firstUnprocessedCrossing];
     while ( crossing != nil ) {
         // This is the start of a contour, so create one
-        FBBezierContour *contour = [[[FBBezierContour alloc] init] autorelease];
+        FBBezierContour *contour = [[FBBezierContour alloc] init];
         [result addContour:contour];
         
         // Keep going until we run into a crossing we've seen before.
@@ -1320,9 +1314,9 @@
 - (NSArray *) nonintersectingContours
 {
     // Find all the contours that have no crossings on them.
-    NSMutableArray *contours = [NSMutableArray arrayWithCapacity:[_contours count]];
+    NSMutableArray *contours = [NSMutableArray arrayWithCapacity:_contours.count];
     for (FBBezierContour *contour in self.contours) {
-        if ( [contour.intersectingContours count] == 0 )
+        if ( (contour.intersectingContours).count == 0 )
             [contours addObject:contour];
     }
     return contours;

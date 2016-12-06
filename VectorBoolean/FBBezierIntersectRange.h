@@ -31,20 +31,20 @@
 + (id) intersectRangeWithCurve1:(FBBezierCurve *)curve1 parameterRange1:(FBRange)parameterRange1 curve2:(FBBezierCurve *)curve2 parameterRange2:(FBRange)parameterRange2 reversed:(BOOL)reversed;
 - (id) initWithCurve1:(FBBezierCurve *)curve1 parameterRange1:(FBRange)parameterRange1 curve2:(FBBezierCurve *)curve2 parameterRange2:(FBRange)parameterRange2 reversed:(BOOL)reversed;
 
-@property (readonly, retain) FBBezierCurve *curve1;
+@property (readonly, strong) FBBezierCurve *curve1;
 @property (readonly) FBRange parameterRange1;
-@property (readonly) FBBezierCurve *curve1LeftBezier;
-@property (readonly) FBBezierCurve *curve1RightBezier;
-@property (readonly) FBBezierCurve *curve1OverlappingBezier;
+@property (weak, readonly) FBBezierCurve *curve1LeftBezier;
+@property (weak, readonly) FBBezierCurve *curve1RightBezier;
+@property (weak, readonly) FBBezierCurve *curve1OverlappingBezier;
 
-@property (readonly, retain) FBBezierCurve *curve2;
+@property (readonly, strong) FBBezierCurve *curve2;
 @property (readonly) FBRange parameterRange2;
 @property (readonly) BOOL reversed;
-@property (readonly) FBBezierCurve *curve2LeftBezier;
-@property (readonly) FBBezierCurve *curve2RightBezier;
-@property (readonly) FBBezierCurve *curve2OverlappingBezier;
+@property (weak, readonly) FBBezierCurve *curve2LeftBezier;
+@property (weak, readonly) FBBezierCurve *curve2RightBezier;
+@property (weak, readonly) FBBezierCurve *curve2OverlappingBezier;
 
-@property (readonly) FBBezierIntersection *middleIntersection;
+@property (weak, readonly) FBBezierIntersection *middleIntersection;
 
 @property (readonly, getter = isAtStartOfCurve1) BOOL atStartOfCurve1;
 @property (readonly, getter = isAtStopOfCurve1) BOOL atStopOfCurve1;

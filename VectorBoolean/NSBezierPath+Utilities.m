@@ -56,17 +56,17 @@ static const CGFloat FBDebugSmallPointSize = 3.0;
 
 - (void) fb_copyAttributesFrom:(NSBezierPath *)path
 {
-    [self setLineWidth:[path lineWidth]];
-    [self setLineCapStyle:[path lineCapStyle]];
-    [self setLineJoinStyle:[path lineJoinStyle]];
-    [self setMiterLimit:[path miterLimit]];
-    [self setFlatness:[path flatness]];
+    self.lineWidth = path.lineWidth;
+    self.lineCapStyle = path.lineCapStyle;
+    self.lineJoinStyle = path.lineJoinStyle;
+    self.miterLimit = path.miterLimit;
+    self.flatness = path.flatness;
 }
 
 - (void) fb_appendPath:(NSBezierPath *)path
 {
-    NSBezierElement previousElement = [self elementCount] > 0 ? [self fb_elementAtIndex:[self elementCount] - 1] : (NSBezierElement){};
-    for (NSUInteger i = 0; i < [path elementCount]; i++) {
+    NSBezierElement previousElement = self.elementCount > 0 ? [self fb_elementAtIndex:self.elementCount - 1] : (NSBezierElement){};
+    for (NSUInteger i = 0; i < path.elementCount; i++) {
         NSBezierElement element = [path fb_elementAtIndex:i];
         
         // If the first element is a move to where we left off, skip it

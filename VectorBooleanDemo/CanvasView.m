@@ -24,7 +24,7 @@ static NSRect BoxFrame(NSPoint point)
 
 @implementation CanvasView
 
-- (id)initWithFrame:(NSRect)frame
+- (instancetype)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -43,7 +43,7 @@ static NSRect BoxFrame(NSPoint point)
 
 - (NSUInteger) numberOfPaths
 {
-    return [self.paths count];
+    return self.paths.count;
 }
 
 - (NSBezierPath *) pathAtIndex:(NSUInteger)index
@@ -87,7 +87,7 @@ static NSRect BoxFrame(NSPoint point)
             [NSBezierPath setDefaultLineCapStyle:NSButtLineCapStyle];
             [NSBezierPath setDefaultLineJoinStyle:NSMiterLineJoinStyle];
             
-            for (NSInteger i = 0; i < [path elementCount]; i++) {
+            for (NSInteger i = 0; i < path.elementCount; i++) {
                 NSBezierElement element = [path fb_elementAtIndex:i];
                 [[NSColor whiteColor] set];
                 [NSBezierPath fillRect:BoxFrame(element.point)];
@@ -106,7 +106,7 @@ static NSRect BoxFrame(NSPoint point)
     }
     
     // If we have exactly two objects, show where they intersect
-    if ( self.showIntersections && [self.paths count] == 2 ) {
+    if ( self.showIntersections && (self.paths).count == 2 ) {
         NSBezierPath *path1 = self.paths[0][@"path"];
         NSBezierPath *path2 = self.paths[1][@"path"];
         NSArray *curves1 = [FBBezierCurve bezierCurvesFromBezierPath:path1];

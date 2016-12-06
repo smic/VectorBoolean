@@ -39,8 +39,8 @@
 
 - (BOOL) isComplete;
 
-@property (readonly) FBBezierContour *contour1;
-@property (readonly) FBBezierContour *contour2;
+@property (weak, readonly) FBBezierContour *contour1;
+@property (weak, readonly) FBBezierContour *contour2;
 
 - (BOOL) doesContainCrossing:(FBEdgeCrossing *)crossing;
 - (BOOL) doesContainParameter:(CGFloat)parameter onEdge:(FBBezierCurve *)edge;
@@ -49,7 +49,7 @@
 
 @interface FBContourOverlap ()
 
-@property (readonly) NSMutableArray * runs_;
+@property (weak, readonly) NSMutableArray * runs_;
 
 @end
 
@@ -144,15 +144,9 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
 
 + (id) contourOverlap
 {
-    return [[[FBContourOverlap alloc] init] autorelease];
+    return [[FBContourOverlap alloc] init];
 }
 
-- (void) dealloc
-{
-    [_runs release];
-    
-    [super dealloc];
-}
 
 - (NSMutableArray *) runs_
 {
@@ -166,15 +160,15 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
 {
     FBEdgeOverlap *overlap = [FBEdgeOverlap overlapWithRange:range edge1:edge1 edge2:edge2];
     BOOL createNewRun = NO;
-    if ( _runs == nil || [_runs count] == 0 ) {
+    if ( _runs == nil || _runs.count == 0 ) {
         createNewRun = YES;
-    } else if ( [_runs count] == 1 ) {
-        BOOL inserted = [[_runs lastObject] insertOverlap:overlap];
+    } else if ( _runs.count == 1 ) {
+        BOOL inserted = [_runs.lastObject insertOverlap:overlap];
         createNewRun = !inserted;
     } else {
-        BOOL inserted = [[_runs lastObject] insertOverlap:overlap];
+        BOOL inserted = [_runs.lastObject insertOverlap:overlap];
         if ( !inserted )
-            inserted = [[_runs objectAtIndex:0] insertOverlap:overlap];
+            inserted = [_runs[0] insertOverlap:overlap];
         createNewRun = !inserted;
     }
     if ( createNewRun ) {
@@ -235,32 +229,32 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
         return NO;
 
     // To be complete, we should have exactly one run that wraps around
-    if ( [_runs count] != 1 )
+    if ( _runs.count != 1 )
         return NO;
     
-    return [[_runs objectAtIndex:0] isComplete];
+    return [_runs[0] isComplete];
 }
 
 - (BOOL) isEmpty
 {
-    return _runs == nil || [_runs count] == 0;
+    return _runs == nil || _runs.count == 0;
 }
 
 - (FBBezierContour *) contour1
 {
-    if ( _runs == nil || [_runs count] == 0 )
+    if ( _runs == nil || _runs.count == 0 )
         return nil;
 
-    FBEdgeOverlapRun *run = [_runs objectAtIndex:0];
+    FBEdgeOverlapRun *run = _runs[0];
     return run.contour1;
 }
 
 - (FBBezierContour *) contour2
 {
-    if ( _runs == nil || [_runs count] == 0 )
+    if ( _runs == nil || _runs.count == 0 )
         return nil;
 
-    FBEdgeOverlapRun *run = [_runs objectAtIndex:0];
+    FBEdgeOverlapRun *run = _runs[0];
     return run.contour2;
 }
 
@@ -285,7 +279,7 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
 
 + (id) overlapRun
 {
-    return [[[FBEdgeOverlapRun alloc] init] autorelease];
+    return [[FBEdgeOverlapRun alloc] init];
 }
 
 - (id) init
@@ -297,29 +291,23 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
     return self;
 }
 
-- (void) dealloc
-{
-    [_overlaps release];
-    
-    [super dealloc];
-}
 
 - (BOOL) insertOverlap:(FBEdgeOverlap *)overlap
 {
-    if ( [_overlaps count] == 0 ) {
+    if ( _overlaps.count == 0 ) {
         // The first one always works
         [_overlaps addObject:overlap];
         return YES;
     }
     
     // Check to see if overlap fits after our last overlap
-    FBEdgeOverlap *lastOverlap = [_overlaps lastObject];
+    FBEdgeOverlap *lastOverlap = _overlaps.lastObject;
     if ( [lastOverlap fitsBefore:overlap] ) {
         [_overlaps addObject:overlap];
         return YES;
     }
     // Check to see if overlap fits before our first overlap
-    FBEdgeOverlap *firstOverlap = [_overlaps objectAtIndex:0];
+    FBEdgeOverlap *firstOverlap = _overlaps.firstObject;
     if ( [firstOverlap fitsAfter:overlap] ) {
         [_overlaps insertObject:overlap atIndex:0];
         return YES;
@@ -330,11 +318,11 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
 - (BOOL) isComplete
 {
     // To be complete, we should wrap around
-    if ( [_overlaps count] == 0 )
+    if ( _overlaps.count == 0 )
         return NO;
     
-    FBEdgeOverlap *lastOverlap = [_overlaps lastObject];
-    FBEdgeOverlap *firstOverlap = [_overlaps objectAtIndex:0];
+    FBEdgeOverlap *lastOverlap = _overlaps.lastObject;
+    FBEdgeOverlap *firstOverlap = _overlaps.firstObject;
     return [lastOverlap fitsBefore:firstOverlap];
 }
 
@@ -345,7 +333,7 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
 
 - (BOOL) doesContainParameter:(CGFloat)parameter onEdge:(FBBezierCurve *)edge
 {
-    if ( [_overlaps count] == 0 )
+    if ( _overlaps.count == 0 )
         return NO;
     
     // Find the FBEdgeOverlap that contains the crossing (if it exists)
@@ -362,8 +350,8 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
         return NO;
     
     
-    FBEdgeOverlap *lastOverlap = [_overlaps lastObject];
-    FBEdgeOverlap *firstOverlap = [_overlaps objectAtIndex:0];
+    FBEdgeOverlap *lastOverlap = _overlaps.lastObject;
+    FBEdgeOverlap *firstOverlap = _overlaps.firstObject;
     
     BOOL atTheStart = containingOverlap == firstOverlap;
     BOOL extendsBeforeStart = !atTheStart || (atTheStart && [lastOverlap fitsBefore:firstOverlap]);
@@ -385,8 +373,8 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
     // Calculate the four tangents: The two tangents moving away from the intersection point on self, the two tangents
     //  moving away from the intersection point on edge2.
 
-    FBEdgeOverlap *firstOverlap = [_overlaps objectAtIndex:0];
-    FBEdgeOverlap *lastOverlap = [_overlaps lastObject];
+    FBEdgeOverlap *firstOverlap = _overlaps.firstObject;
+    FBEdgeOverlap *lastOverlap = _overlaps.lastObject;
 
     NSPoint edge1Tangents[] = { NSZeroPoint, NSZeroPoint };
     NSPoint edge2Tangents[] = { NSZeroPoint, NSZeroPoint };
@@ -417,28 +405,28 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
 - (void) addCrossings
 {
     // Add crossings to both graphs for this intersection/overlap. Pick the middle point and use that
-    if ( [_overlaps count] == 0 )
+    if ( _overlaps.count == 0 )
         return;
     
-    FBEdgeOverlap *middleOverlap = [_overlaps objectAtIndex:[_overlaps count] / 2];
+    FBEdgeOverlap *middleOverlap = _overlaps[_overlaps.count / 2];
     [middleOverlap addMiddleCrossing];
 }
 
 - (FBBezierContour *) contour1
 {
-    if ( [_overlaps count] == 0 )
+    if ( _overlaps.count == 0 )
         return nil;
     
-    FBEdgeOverlap *overlap = [_overlaps objectAtIndex:0];
+    FBEdgeOverlap *overlap = _overlaps.firstObject;
     return overlap.edge1.contour;
 }
 
 - (FBBezierContour *) contour2
 {
-    if ( [_overlaps count] == 0 )
+    if ( _overlaps.count == 0 )
         return nil;
     
-    FBEdgeOverlap *overlap = [_overlaps objectAtIndex:0];
+    FBEdgeOverlap *overlap = _overlaps.firstObject;
     return overlap.edge2.contour;
 }
 
@@ -458,28 +446,20 @@ static void FBComputeEdge1TestPoints(FBEdgeOverlap *firstOverlap, FBEdgeOverlap 
 
 + (id) overlapWithRange:(FBBezierIntersectRange *)range edge1:(FBBezierCurve *)edge1 edge2:(FBBezierCurve *)edge2
 {
-    return [[[FBEdgeOverlap alloc] initWithRange:range edge1:edge1 edge2:edge2] autorelease];
+    return [[FBEdgeOverlap alloc] initWithRange:range edge1:edge1 edge2:edge2];
 }
 
 - (id) initWithRange:(FBBezierIntersectRange *)range edge1:(FBBezierCurve *)edge1 edge2:(FBBezierCurve *)edge2
 {
     self = [super init];
     if ( self != nil ) {
-        _edge1 = [edge1 retain];
-        _edge2 = [edge2 retain];
-        _range = [range retain];
+        _edge1 = edge1;
+        _edge2 = edge2;
+        _range = range;
     }
     return self;
 }
 
-- (void) dealloc
-{
-    [_edge1 release];
-    [_edge2 release];
-    [_range release];
-    
-    [super dealloc];
-}
 
 - (BOOL) fitsBefore:(FBEdgeOverlap *)nextOverlap
 {

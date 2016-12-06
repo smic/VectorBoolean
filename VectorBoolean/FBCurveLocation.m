@@ -7,6 +7,10 @@
 //
 
 #import "FBCurveLocation.h"
+#import "FBBezierCurve.h"
+#import "FBBezierContour.h"
+#import "FBBezierGraph.h"
+
 
 @implementation FBCurveLocation
 
@@ -18,27 +22,20 @@
 
 + (id) curveLocationWithEdge:(FBBezierCurve *)edge parameter:(CGFloat)parameter distance:(CGFloat)distance
 {
-    return [[[FBCurveLocation alloc] initWithEdge:edge parameter:parameter distance:distance] autorelease];
+    return [[FBCurveLocation alloc] initWithEdge:edge parameter:parameter distance:distance];
 }
 
 - (id) initWithEdge:(FBBezierCurve *)edge parameter:(CGFloat)parameter distance:(CGFloat)distance
 {
     self = [super init];
     if ( self != nil ) {
-        _edge = [edge retain];
+        _edge = edge;
         _parameter = parameter;
         _distance = distance;
     }
     return self;
 }
 
-- (void) dealloc
-{
-    [_graph release];
-    [_contour release];
-    [_edge release];
-    [super dealloc];
-}
 
 
 @end
